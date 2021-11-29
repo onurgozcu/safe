@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "743455274631",
+    "project_id": "safe-a26dd",
+    "storage_bucket": "safe-a26dd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:743455274631:android:ad8265569132adf0302a22",
+        "android_client_info": {
+          "package_name": "net.techrea.safe"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "743455274631-lj8dm9hm2n915ntca945dbjit0jktfib.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "net.techrea.safe",
+            "certificate_hash": "1b0d945c74b6c1c92ee3916403327e8261cbe862"
+          }
+        },
+        {
+          "client_id": "743455274631-i360qv08l533rq6gr15njnfn96qa3snt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGQL7NVCSf8dncSlHYLwdkpCv1J3jBqV4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "743455274631-i360qv08l533rq6gr15njnfn96qa3snt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
