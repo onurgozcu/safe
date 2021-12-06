@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'FadeRoute.dart';
 import 'ShoppingPage.dart';
@@ -139,18 +140,94 @@ class _AnchorPageState extends State<AnchorPage> {
                                       .get()
                                       .then((value) {
                                     if (value.size > 0) {
-                                      value.docs[0].reference.update({
-                                        "buyer": _firebaseAuth.currentUser!.uid,
-                                        "buyerJoinDate":
-                                            FieldValue.serverTimestamp(),
-                                        "users": FieldValue.arrayUnion([
-                                          _firebaseAuth.currentUser!.uid,
-                                        ]),
-                                        "state": "Ödeme bekleniyor",
-                                      }).whenComplete(() {
-                                        _refCodeController.clear();
-                                        Navigator.pop(context);
-                                      });
+                                      if (value.docs[0].data()["seller"] ==
+                                          _firebaseAuth.currentUser!.uid) {
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return Center(
+                                                child: Wrap(
+                                                  children: [
+                                                    Stack(
+                                                      children: [
+                                                        AlertDialog(
+                                                          shape:
+                                                              RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        15),
+                                                          ),
+                                                          backgroundColor:
+                                                              Color(0xFF6EB0FC),
+                                                          content: Center(
+                                                            child: Column(
+                                                              children: [
+                                                                Align(
+                                                                  alignment:
+                                                                      Alignment
+                                                                          .topRight,
+                                                                  child:
+                                                                      GestureDetector(
+                                                                    onTap: () {
+                                                                      Navigator.pop(
+                                                                          context);
+                                                                    },
+                                                                    child: Icon(
+                                                                      FontAwesomeIcons
+                                                                          .times,
+                                                                      color: Colors
+                                                                          .white,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                SizedBox(
+                                                                  height: 48.0,
+                                                                ),
+                                                                Text(
+                                                                  "Kendi oluşturduğunuz ilana alıcı olamazsınız!",
+                                                                  style:
+                                                                      TextStyle(
+                                                                    color: Colors
+                                                                        .white,
+                                                                  ),
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Align(
+                                                          alignment: Alignment
+                                                              .topCenter,
+                                                          child: Image.asset(
+                                                            "assets/images/warningDialogDraw.png",
+                                                            height: 96.0,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              );
+                                            });
+                                      } else {
+                                        value.docs[0].reference.update({
+                                          "buyer":
+                                              _firebaseAuth.currentUser!.uid,
+                                          "buyerJoinDate":
+                                              FieldValue.serverTimestamp(),
+                                          "users": FieldValue.arrayUnion([
+                                            _firebaseAuth.currentUser!.uid,
+                                          ]),
+                                          "state": "Ödeme bekleniyor",
+                                        }).whenComplete(() {
+                                          _refCodeController.clear();
+                                          Navigator.pop(context);
+                                        });
+                                      }
                                     } else {
                                       _refCodeController.clear();
                                       Navigator.pop(context);

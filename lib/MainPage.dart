@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:safe/InfoPage.dart';
+import 'package:safe/ProfilePage.dart';
 import 'package:safe/ShoppingPage.dart';
+import 'package:safe/SolutionCenter.dart';
 import 'package:safe/constants.dart';
 
 import 'AnchorPage.dart';
@@ -17,10 +20,10 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   List<Widget> pages = [
     ShoppingPage(),
-    Container(),
+    SolutionCenter(),
     AnchorPage(),
-    Container(),
-    Container(),
+    InfoPage(),
+    ProfilePage(),
   ];
   List<String> titles = [
     "Alışverişlerim",
