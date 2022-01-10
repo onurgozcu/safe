@@ -1,3 +1,8 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:safe/InfoPage.dart';
 import 'package:safe/ProfilePage.dart';
@@ -33,43 +38,63 @@ class _MainPageState extends State<MainPage> {
     "Profil",
   ];
   late int pageIndex;
+  StreamSubscription? _subscription;
 
   @override
   void initState() {
+    _subscription = FirebaseMessaging.instance.onTokenRefresh.listen((event) {
+      FirebaseFirestore.instance
+          .collection("Users")
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .update({
+        "fcmToken": event,
+      });
+    });
+
     pageIndex = widget.initialIndex;
     super.initState();
   }
 
   @override
+  void dispose() {
+    if (_subscription != null) {
+      _subscription!.cancel();
+    }
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(top: 32.0),
-        child: Container(
-          height: 65.0,
-          width: 65.0,
-          child: FittedBox(
-            child: FloatingActionButton(
-                elevation: 4.0,
-                child: Padding(
-                  padding: const EdgeInsets.all(14.0),
-                  child: Image.asset(
-                    pageIndex != 2
-                        ? "assets/images/navBarUnselectedMain.png"
-                        : "assets/images/navBarSelectedMain.png",
-                  ),
+      floatingActionButton: MediaQuery.of(context).viewInsets.bottom == 0.0
+          ? Padding(
+              padding: const EdgeInsets.only(top: 32.0),
+              child: Container(
+                height: 65.0,
+                width: 65.0,
+                child: FittedBox(
+                  child: FloatingActionButton(
+                      elevation: 4.0,
+                      child: Padding(
+                        padding: const EdgeInsets.all(14.0),
+                        child: Image.asset(
+                          pageIndex != 2
+                              ? "assets/images/navBarUnselectedMain.png"
+                              : "assets/images/navBarSelectedMain.png",
+                        ),
+                      ),
+                      backgroundColor: kDarkBlue,
+                      onPressed: () {
+                        if (pageIndex != 2) {
+                          setState(() {
+                            pageIndex = 2;
+                          });
+                        }
+                      }),
                 ),
-                backgroundColor: kDarkBlue,
-                onPressed: () {
-                  if (pageIndex != 2) {
-                    setState(() {
-                      pageIndex = 2;
-                    });
-                  }
-                }),
-          ),
-        ),
-      ),
+              ),
+            )
+          : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: Container(
         width: MediaQuery.of(context).size.width,

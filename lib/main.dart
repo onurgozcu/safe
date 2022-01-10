@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -162,7 +163,7 @@ class _WelcomePageState extends State<WelcomePage> {
                       ),
                     ),
                     Text(
-                      "Safe ile güvenle alışveriş yapın!",
+                      "Safe size güven sağlar.",
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w700,
@@ -290,6 +291,9 @@ class _SignUpPageState extends State<SignUpPage> {
   TextEditingController _mailController = TextEditingController();
   TextEditingController _phoneController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+  TextEditingController _realNameController = TextEditingController();
+  TextEditingController _idNoController = TextEditingController();
+  TextEditingController _addressController = TextEditingController();
   bool isPolicyChecked = false;
   bool isContactChecked = false;
 
@@ -303,8 +307,10 @@ class _SignUpPageState extends State<SignUpPage> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
+          constraints: BoxConstraints(
+            minWidth: MediaQuery.of(context).size.width,
+            minHeight: MediaQuery.of(context).size.height,
+          ),
           decoration: BoxDecoration(
             image: DecorationImage(
               image: AssetImage(
@@ -351,11 +357,121 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                     ],
                   ),
+                  SizedBox(
+                    height: 100.0,
+                  ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12.0,
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        TextField(
+                          controller: _realNameController,
+                          decoration: InputDecoration(
+                            hintText: "Ad Soyad",
+                            hintStyle: TextStyle(
+                              color: Color(0xFFDEDEDE),
+                              fontWeight: FontWeight.w500,
+                              fontSize: 11.0,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                              borderSide: BorderSide.none,
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                              borderSide: BorderSide.none,
+                            ),
+                            fillColor: kPurpleBlue,
+                            focusColor: Color(0xFF89AEFB),
+                            filled: true,
+                            contentPadding: EdgeInsets.symmetric(
+                              vertical: 14.0,
+                              horizontal: 12.0,
+                            ),
+                          ),
+                          keyboardType: TextInputType.name,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 11.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 8.0,
+                        ),
+                        TextField(
+                          controller: _idNoController,
+                          decoration: InputDecoration(
+                            hintText: "T.C. Kimlik No",
+                            hintStyle: TextStyle(
+                              color: Color(0xFFDEDEDE),
+                              fontWeight: FontWeight.w500,
+                              fontSize: 11.0,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                              borderSide: BorderSide.none,
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                              borderSide: BorderSide.none,
+                            ),
+                            fillColor: kPurpleBlue,
+                            focusColor: Color(0xFF89AEFB),
+                            filled: true,
+                            contentPadding: EdgeInsets.symmetric(
+                              vertical: 14.0,
+                              horizontal: 12.0,
+                            ),
+                          ),
+                          keyboardType: TextInputType.number,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 11.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 8.0,
+                        ),
+                        TextField(
+                          controller: _addressController,
+                          decoration: InputDecoration(
+                            hintText: "Adres",
+                            hintStyle: TextStyle(
+                              color: Color(0xFFDEDEDE),
+                              fontWeight: FontWeight.w500,
+                              fontSize: 11.0,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                              borderSide: BorderSide.none,
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                              borderSide: BorderSide.none,
+                            ),
+                            fillColor: kPurpleBlue,
+                            focusColor: Color(0xFF89AEFB),
+                            filled: true,
+                            contentPadding: EdgeInsets.symmetric(
+                              vertical: 14.0,
+                              horizontal: 12.0,
+                            ),
+                          ),
+                          keyboardType: TextInputType.name,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 11.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 8.0,
+                        ),
                         TextField(
                           controller: _phoneController,
                           decoration: InputDecoration(
@@ -763,18 +879,107 @@ class _SignUpPageState extends State<SignUpPage> {
                                                             );
                                                           });
                                                     } else {
-                                                      await verifyUser(
-                                                        phoneNumber: _userPhone,
-                                                        context: context,
-                                                        isLogIn: false,
-                                                        mail: _mailController
-                                                            .text,
-                                                        name: _nameController
-                                                            .text,
-                                                        password:
-                                                            _passwordController
-                                                                .text,
-                                                      );
+                                                      if (_addressController
+                                                          .text.isEmpty) {
+                                                        showDialog(
+                                                            context: context,
+                                                            builder: (context) {
+                                                              return AlertDialog(
+                                                                title: Text(
+                                                                    'Lütfen Geçerli Bir Adres Girin'),
+                                                                actions: [
+                                                                  TextButton(
+                                                                    onPressed:
+                                                                        () {
+                                                                      Navigator.pop(
+                                                                          context);
+                                                                    },
+                                                                    child: Text(
+                                                                        'Tamam'),
+                                                                  ),
+                                                                ],
+                                                              );
+                                                            });
+                                                      } else {
+                                                        if (_realNameController
+                                                            .text.isEmpty) {
+                                                          showDialog(
+                                                              context: context,
+                                                              builder:
+                                                                  (context) {
+                                                                return AlertDialog(
+                                                                  title: Text(
+                                                                      'Lütfen Geçerli Bir Ad Soyad Girin'),
+                                                                  actions: [
+                                                                    TextButton(
+                                                                      onPressed:
+                                                                          () {
+                                                                        Navigator.pop(
+                                                                            context);
+                                                                      },
+                                                                      child: Text(
+                                                                          'Tamam'),
+                                                                    ),
+                                                                  ],
+                                                                );
+                                                              });
+                                                        } else {
+                                                          if (_idNoController
+                                                                  .text
+                                                                  .isEmpty ||
+                                                              _idNoController
+                                                                      .text
+                                                                      .length !=
+                                                                  11) {
+                                                            showDialog(
+                                                                context:
+                                                                    context,
+                                                                builder:
+                                                                    (context) {
+                                                                  return AlertDialog(
+                                                                    title: Text(
+                                                                        'Lütfen Geçerli Bir Kimlik Numarası Girin'),
+                                                                    actions: [
+                                                                      TextButton(
+                                                                        onPressed:
+                                                                            () {
+                                                                          Navigator.pop(
+                                                                              context);
+                                                                        },
+                                                                        child: Text(
+                                                                            'Tamam'),
+                                                                      ),
+                                                                    ],
+                                                                  );
+                                                                });
+                                                          } else {
+                                                            await verifyUser(
+                                                              phoneNumber:
+                                                                  _userPhone,
+                                                              context: context,
+                                                              isLogIn: false,
+                                                              mail:
+                                                                  _mailController
+                                                                      .text,
+                                                              name:
+                                                                  _nameController
+                                                                      .text,
+                                                              password:
+                                                                  _passwordController
+                                                                      .text,
+                                                              address:
+                                                                  _addressController
+                                                                      .text,
+                                                              idNo:
+                                                                  _idNoController
+                                                                      .text,
+                                                              realName:
+                                                                  _realNameController
+                                                                      .text,
+                                                            );
+                                                          }
+                                                        }
+                                                      }
                                                     }
                                                   }
                                                 });
@@ -1070,6 +1275,9 @@ class _LogInPageState extends State<LogInPage> {
                                     isLogIn: true,
                                     mail: "",
                                     name: "",
+                                    realName: "",
+                                    idNo: "",
+                                    address: "",
                                     password: _passwordController.text,
                                   );
                                 }
@@ -1103,8 +1311,12 @@ class CodePage extends StatefulWidget {
   final String name;
   final String mail;
   final String password;
+  final String idNo;
+  final String address;
+  final String realName;
   final bool isLogIn;
   final String verificationID;
+  final isUpdate;
   const CodePage({
     required this.phoneNumber,
     required this.isLogIn,
@@ -1112,6 +1324,10 @@ class CodePage extends StatefulWidget {
     required this.name,
     required this.mail,
     required this.password,
+    required this.isUpdate,
+    required this.idNo,
+    required this.address,
+    required this.realName,
   });
 
   @override
@@ -1303,15 +1519,19 @@ class _CodePageState extends State<CodePage> {
                                     ),
                                   );
                                 });
-                            FirebaseAuth.instance
-                                .signInWithCredential(
-                                    PhoneAuthProvider.credential(
-                                        verificationId: widget.verificationID,
-                                        smsCode: _codeController.text))
-                                .then((credential) {
-                              if (widget.isLogIn) {
-                                Navigator.of(context, rootNavigator: true)
-                                    .pop('dialog');
+                            if (widget.isUpdate) {
+                              await FirebaseAuth.instance.currentUser!
+                                  .updatePhoneNumber(
+                                      PhoneAuthProvider.credential(
+                                          verificationId: widget.verificationID,
+                                          smsCode: _codeController.text))
+                                  .whenComplete(() async {
+                                await FirebaseFirestore.instance
+                                    .collection("Users")
+                                    .doc(FirebaseAuth.instance.currentUser!.uid)
+                                    .update({
+                                  "phoneNumber": widget.phoneNumber,
+                                });
                                 Navigator.pushAndRemoveUntil(
                                   context,
                                   FadeRoute(
@@ -1319,21 +1539,106 @@ class _CodePageState extends State<CodePage> {
                                   ),
                                   (route) => false,
                                 );
-                              } else {
-                                FirebaseFirestore.instance
-                                    .collection("Users")
-                                    .doc(credential.user!.uid)
-                                    .set({
-                                  "phoneNumber": widget.phoneNumber,
-                                  "password": widget.password,
-                                  "name": widget.name,
-                                  "mail": widget.mail,
-                                  "uid": credential.user!.uid,
-                                  "signUpDate": FieldValue.serverTimestamp(),
-                                }).whenComplete(() {
+                              }).catchError((Object e) {
+                                if (e is FirebaseAuthException) {
+                                  print(e.code);
+
+                                  if (e.code == 'ınvalıd-phone-number' ||
+                                      e.code == 'mıssıng-phone-number') {
+                                    _codeController.clear();
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: Text(
+                                                'Lütfen Telefon Numaranızı doğru girdiğinizden emin olun.'),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Text('Tamam'),
+                                              ),
+                                            ],
+                                          );
+                                        });
+                                  }
+
+                                  if (e.code == 'ınvalıd-verıfıcatıon-code' ||
+                                      e.code == 'mıssıng-verıfıcatıon-code' ||
+                                      e.code == 'ınvalıd-verıfıcatıon-ıd') {
+                                    _codeController.clear();
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: Text(
+                                                'Lütfen SMS kodunu doğru girdiğinizden emin olun.'),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Text('Tamam'),
+                                              ),
+                                            ],
+                                          );
+                                        });
+                                  }
+                                  if (e.code == 'sessıon-expıred') {
+                                    _codeController.clear();
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title:
+                                                Text('Lütfen tekrar deneyin.'),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Text('Tamam'),
+                                              ),
+                                            ],
+                                          );
+                                        });
+                                  }
+                                  if (e.code == 'too-many-requests') {
+                                    _codeController.clear();
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: Text(
+                                                'Çok fazla sayıda deneme yaptığınız için giriş işlemleriniz bir süre askıya alındı.'),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Text('Tamam'),
+                                              ),
+                                            ],
+                                          );
+                                        });
+                                  }
+                                }
+                              });
+                            } else {
+                              FirebaseAuth.instance
+                                  .signInWithCredential(
+                                      PhoneAuthProvider.credential(
+                                          verificationId: widget.verificationID,
+                                          smsCode: _codeController.text))
+                                  .then((credential) {
+                                if (widget.isLogIn) {
                                   Navigator.of(context, rootNavigator: true)
                                       .pop('dialog');
-
                                   Navigator.pushAndRemoveUntil(
                                     context,
                                     FadeRoute(
@@ -1341,97 +1646,131 @@ class _CodePageState extends State<CodePage> {
                                     ),
                                     (route) => false,
                                   );
-                                });
-                              }
-                            }).catchError((Object e) {
-                              if (e is FirebaseAuthException) {
-                                print(e.code);
+                                } else {
+                                  FirebaseMessaging.instance
+                                      .getToken()
+                                      .then((fcmToken) {
+                                    FirebaseFirestore.instance
+                                        .collection("Users")
+                                        .doc(credential.user!.uid)
+                                        .set({
+                                      "phoneNumber": widget.phoneNumber,
+                                      "address": widget.address,
+                                      "idNo": widget.idNo,
+                                      "realName": widget.realName,
+                                      "password": widget.password,
+                                      "name": widget.name,
+                                      "mail": widget.mail,
+                                      "uid": credential.user!.uid,
+                                      "allowNotifications": true,
+                                      "fcmToken": fcmToken,
+                                      "signUpDate":
+                                          FieldValue.serverTimestamp(),
+                                    }).whenComplete(() {
+                                      Navigator.of(context, rootNavigator: true)
+                                          .pop('dialog');
 
-                                if (e.code == 'ınvalıd-phone-number' ||
-                                    e.code == 'mıssıng-phone-number') {
-                                  _codeController.clear();
-                                  showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return AlertDialog(
-                                          title: Text(
-                                              'Lütfen Telefon Numaranızı doğru girdiğinizden emin olun.'),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                                Navigator.pop(context);
-                                              },
-                                              child: Text('Tamam'),
-                                            ),
-                                          ],
-                                        );
-                                      });
+                                      Navigator.pushAndRemoveUntil(
+                                        context,
+                                        FadeRoute(
+                                          page: MainPage(),
+                                        ),
+                                        (route) => false,
+                                      );
+                                    });
+                                  });
                                 }
+                              }).catchError((Object e) {
+                                if (e is FirebaseAuthException) {
+                                  print(e.code);
 
-                                if (e.code == 'ınvalıd-verıfıcatıon-code' ||
-                                    e.code == 'mıssıng-verıfıcatıon-code' ||
-                                    e.code == 'ınvalıd-verıfıcatıon-ıd') {
-                                  _codeController.clear();
-                                  showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return AlertDialog(
-                                          title: Text(
-                                              'Lütfen SMS kodunu doğru girdiğinizden emin olun.'),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                                Navigator.pop(context);
-                                              },
-                                              child: Text('Tamam'),
-                                            ),
-                                          ],
-                                        );
-                                      });
+                                  if (e.code == 'ınvalıd-phone-number' ||
+                                      e.code == 'mıssıng-phone-number') {
+                                    _codeController.clear();
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: Text(
+                                                'Lütfen Telefon Numaranızı doğru girdiğinizden emin olun.'),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Text('Tamam'),
+                                              ),
+                                            ],
+                                          );
+                                        });
+                                  }
+
+                                  if (e.code == 'ınvalıd-verıfıcatıon-code' ||
+                                      e.code == 'mıssıng-verıfıcatıon-code' ||
+                                      e.code == 'ınvalıd-verıfıcatıon-ıd') {
+                                    _codeController.clear();
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: Text(
+                                                'Lütfen SMS kodunu doğru girdiğinizden emin olun.'),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Text('Tamam'),
+                                              ),
+                                            ],
+                                          );
+                                        });
+                                  }
+                                  if (e.code == 'sessıon-expıred') {
+                                    _codeController.clear();
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title:
+                                                Text('Lütfen tekrar deneyin.'),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Text('Tamam'),
+                                              ),
+                                            ],
+                                          );
+                                        });
+                                  }
+                                  if (e.code == 'too-many-requests') {
+                                    _codeController.clear();
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: Text(
+                                                'Çok fazla sayıda deneme yaptığınız için giriş işlemleriniz bir süre askıya alındı.'),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Text('Tamam'),
+                                              ),
+                                            ],
+                                          );
+                                        });
+                                  }
                                 }
-                                if (e.code == 'sessıon-expıred') {
-                                  _codeController.clear();
-                                  showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return AlertDialog(
-                                          title: Text('Lütfen tekrar deneyin.'),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                                Navigator.pop(context);
-                                              },
-                                              child: Text('Tamam'),
-                                            ),
-                                          ],
-                                        );
-                                      });
-                                }
-                                if (e.code == 'too-many-requests') {
-                                  _codeController.clear();
-                                  showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return AlertDialog(
-                                          title: Text(
-                                              'Çok fazla sayıda deneme yaptığınız için giriş işlemleriniz bir süre askıya alındı.'),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                                Navigator.pop(context);
-                                              },
-                                              child: Text('Tamam'),
-                                            ),
-                                          ],
-                                        );
-                                      });
-                                }
-                              }
-                            });
+                              });
+                            }
                           },
                         ),
                       ),
@@ -1494,6 +1833,10 @@ Future verifyUser({
   required String name,
   required String mail,
   required String password,
+  required String realName,
+  required String idNo,
+  required String address,
+  bool isUpdate = false,
 }) async {
   showDialog(
       context: context,
@@ -1507,196 +1850,32 @@ Future verifyUser({
       });
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
   FirebaseAuth _auth = FirebaseAuth.instance;
-  if (isLogIn) {
-    await _firestore
-        .collection("Users")
-        .where("name", isEqualTo: phoneNumber)
-        .get()
-        .then((nameValue) async {
-      if (nameValue.size > 0) {
-        if (nameValue.docs[0].data()["password"] == password) {
-          phoneNumber = nameValue.docs[0].data()["phoneNumber"];
-        } else {
-          phoneNumber = "";
-          showDialog(
-              context: context,
-              builder: (context) {
-                return AlertDialog(
-                  title: Text('Şifrenizi doğru girdiğinizden emin olun.'),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                        Navigator.pop(context);
-                      },
-                      child: Text('Tamam'),
-                    ),
-                  ],
-                );
-              });
-        }
-      } else {
-        await _firestore
-            .collection("Users")
-            .where("mail", isEqualTo: phoneNumber)
-            .get()
-            .then((mailValue) async {
-          if (mailValue.size > 0) {
-            if (mailValue.docs[0].data()["password"] == password) {
-              phoneNumber = mailValue.docs[0].data()["phoneNumber"];
-            } else {
-              phoneNumber = "";
-              showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      title: Text('Şifrenizi doğru girdiğinizden emin olun.'),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                            Navigator.pop(context);
-                          },
-                          child: Text('Tamam'),
-                        ),
-                      ],
-                    );
-                  });
-            }
+  await FirebaseMessaging.instance.requestPermission(
+    alert: true,
+    announcement: false,
+    badge: true,
+    carPlay: false,
+    criticalAlert: false,
+    provisional: false,
+    sound: true,
+  );
+  if (!isUpdate) {
+    if (isLogIn) {
+      await _firestore
+          .collection("Users")
+          .where("name", isEqualTo: phoneNumber)
+          .get()
+          .then((nameValue) async {
+        if (nameValue.size > 0) {
+          if (nameValue.docs[0].data()["password"] == password) {
+            phoneNumber = nameValue.docs[0].data()["phoneNumber"];
           } else {
-            if (phoneNumber != '' &&
-                phoneNumber.isNotEmpty &&
-                phoneNumber.trim().isNotEmpty) {
-              if (phoneNumber.substring(0, 1) == '5') {
-                phoneNumber = '+90' + phoneNumber;
-              } else if (phoneNumber.substring(0, 1) == '0') {
-                phoneNumber = '+9' + phoneNumber;
-              } else if (phoneNumber.substring(0, 1) == '9') {
-                phoneNumber = '+' + phoneNumber;
-              }
-              if (phoneNumber.length != 13) {
-                phoneNumber = "";
-                showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        title: Text('Kayıtlı kullanıcı bulunamadı.'),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                              Navigator.pop(context);
-                            },
-                            child: Text('Tamam'),
-                          ),
-                        ],
-                      );
-                    });
-              } else if (phoneNumber.substring(0, 4) != '+905') {
-                phoneNumber = "";
-                showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        title: Text('Kayıtlı kullanıcı bulunamadı.'),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                              Navigator.pop(context);
-                            },
-                            child: Text('Tamam'),
-                          ),
-                        ],
-                      );
-                    });
-              } else {
-                await _firestore
-                    .collection("Users")
-                    .where("phoneNumber", isEqualTo: phoneNumber)
-                    .get()
-                    .then((phoneValue) {
-                  if (phoneValue.size == 0) {
-                    phoneNumber = "";
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            title: Text('Kayıtlı kullanıcı bulunamadı.'),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
-                                },
-                                child: Text('Tamam'),
-                              ),
-                            ],
-                          );
-                        });
-                  } else {
-                    if (phoneValue.docs[0].data()["password"] == password) {
-                      phoneNumber = phoneValue.docs[0].data()["phoneNumber"];
-                    } else {
-                      phoneNumber = "";
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: Text(
-                                  'Şifrenizi doğru girdiğinizden emin olun.'),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                    Navigator.pop(context);
-                                  },
-                                  child: Text('Tamam'),
-                                ),
-                              ],
-                            );
-                          });
-                    }
-                  }
-                });
-              }
-            } else {
-              phoneNumber = "";
-              showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      title: Text('Kayıtlı kullanıcı bulunamadı.'),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                            Navigator.pop(context);
-                          },
-                          child: Text('Tamam'),
-                        ),
-                      ],
-                    );
-                  });
-            }
-          }
-        });
-      }
-    });
-  } else {
-    await _firestore
-        .collection("Users")
-        .where("phoneNumber", whereIn: [phoneNumber, name, mail])
-        .get()
-        .then((phoneValue) async {
-          if (phoneValue.size > 0) {
             phoneNumber = "";
             showDialog(
                 context: context,
                 builder: (context) {
                   return AlertDialog(
-                    title: Text(
-                        'Bu telefon numarası ile kayıtlı bir kullanıcı zaten var'),
+                    title: Text('Şifrenizi doğru girdiğinizden emin olun.'),
                     actions: [
                       TextButton(
                         onPressed: () {
@@ -1708,64 +1887,239 @@ Future verifyUser({
                     ],
                   );
                 });
-            return;
-          } else {
-            await _firestore
-                .collection("Users")
-                .where("mail", whereIn: [phoneNumber, name, mail])
-                .get()
-                .then((mailValue) async {
-                  if (mailValue.size > 0) {
-                    phoneNumber = "";
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            title: Text(
-                                'Bu mail adresi ile kayıtlı bir kullanıcı zaten var'),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
-                                },
-                                child: Text('Tamam'),
-                              ),
-                            ],
-                          );
-                        });
-                    return;
-                  } else {
-                    await _firestore
-                        .collection("Users")
-                        .where("name", whereIn: [phoneNumber, name, mail])
-                        .get()
-                        .then((nameValue) {
-                          if (nameValue.size > 0) {
-                            phoneNumber = "";
-                            showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: Text(
-                                        'Bu kullanıcı adı ile kayıtlı bir kullanıcı zaten var'),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                          Navigator.pop(context);
-                                        },
-                                        child: Text('Tamam'),
-                                      ),
-                                    ],
-                                  );
-                                });
-                          }
-                        });
-                  }
-                });
           }
-        });
+        } else {
+          await _firestore
+              .collection("Users")
+              .where("mail", isEqualTo: phoneNumber)
+              .get()
+              .then((mailValue) async {
+            if (mailValue.size > 0) {
+              if (mailValue.docs[0].data()["password"] == password) {
+                phoneNumber = mailValue.docs[0].data()["phoneNumber"];
+              } else {
+                phoneNumber = "";
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: Text('Şifrenizi doğru girdiğinizden emin olun.'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                            },
+                            child: Text('Tamam'),
+                          ),
+                        ],
+                      );
+                    });
+              }
+            } else {
+              if (phoneNumber != '' &&
+                  phoneNumber.isNotEmpty &&
+                  phoneNumber.trim().isNotEmpty) {
+                if (phoneNumber.substring(0, 1) == '5') {
+                  phoneNumber = '+90' + phoneNumber;
+                } else if (phoneNumber.substring(0, 1) == '0') {
+                  phoneNumber = '+9' + phoneNumber;
+                } else if (phoneNumber.substring(0, 1) == '9') {
+                  phoneNumber = '+' + phoneNumber;
+                }
+                if (phoneNumber.length != 13) {
+                  phoneNumber = "";
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text('Kayıtlı kullanıcı bulunamadı.'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                              },
+                              child: Text('Tamam'),
+                            ),
+                          ],
+                        );
+                      });
+                } else if (phoneNumber.substring(0, 4) != '+905') {
+                  phoneNumber = "";
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text('Kayıtlı kullanıcı bulunamadı.'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                              },
+                              child: Text('Tamam'),
+                            ),
+                          ],
+                        );
+                      });
+                } else {
+                  await _firestore
+                      .collection("Users")
+                      .where("phoneNumber", isEqualTo: phoneNumber)
+                      .get()
+                      .then((phoneValue) {
+                    if (phoneValue.size == 0) {
+                      phoneNumber = "";
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: Text('Kayıtlı kullanıcı bulunamadı.'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text('Tamam'),
+                                ),
+                              ],
+                            );
+                          });
+                    } else {
+                      if (phoneValue.docs[0].data()["password"] == password) {
+                        phoneNumber = phoneValue.docs[0].data()["phoneNumber"];
+                      } else {
+                        phoneNumber = "";
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: Text(
+                                    'Şifrenizi doğru girdiğinizden emin olun.'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text('Tamam'),
+                                  ),
+                                ],
+                              );
+                            });
+                      }
+                    }
+                  });
+                }
+              } else {
+                phoneNumber = "";
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: Text('Kayıtlı kullanıcı bulunamadı.'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                            },
+                            child: Text('Tamam'),
+                          ),
+                        ],
+                      );
+                    });
+              }
+            }
+          });
+        }
+      });
+    } else {
+      await _firestore
+          .collection("Users")
+          .where("phoneNumber", whereIn: [phoneNumber, name, mail])
+          .get()
+          .then((phoneValue) async {
+            if (phoneValue.size > 0) {
+              phoneNumber = "";
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text(
+                          'Bu telefon numarası ile kayıtlı bir kullanıcı zaten var'),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          },
+                          child: Text('Tamam'),
+                        ),
+                      ],
+                    );
+                  });
+              return;
+            } else {
+              await _firestore
+                  .collection("Users")
+                  .where("mail", whereIn: [phoneNumber, name, mail])
+                  .get()
+                  .then((mailValue) async {
+                    if (mailValue.size > 0) {
+                      phoneNumber = "";
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: Text(
+                                  'Bu mail adresi ile kayıtlı bir kullanıcı zaten var'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text('Tamam'),
+                                ),
+                              ],
+                            );
+                          });
+                      return;
+                    } else {
+                      await _firestore
+                          .collection("Users")
+                          .where("name", whereIn: [phoneNumber, name, mail])
+                          .get()
+                          .then((nameValue) {
+                            if (nameValue.size > 0) {
+                              phoneNumber = "";
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: Text(
+                                          'Bu kullanıcı adı ile kayıtlı bir kullanıcı zaten var'),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text('Tamam'),
+                                        ),
+                                      ],
+                                    );
+                                  });
+                            }
+                          });
+                    }
+                  });
+            }
+          });
+    }
   }
   if (phoneNumber == "") {
     return;
@@ -1774,10 +2128,16 @@ Future verifyUser({
     phoneNumber: phoneNumber,
     timeout: Duration(seconds: 120),
     verificationCompleted: (PhoneAuthCredential phoneAuthCredential) async {
-      await _auth
-          .signInWithCredential(phoneAuthCredential)
-          .then((result) async {
-        if (isLogIn) {
+      if (isUpdate) {
+        await FirebaseAuth.instance.currentUser!
+            .updatePhoneNumber(phoneAuthCredential)
+            .whenComplete(() async {
+          await _firestore
+              .collection("Users")
+              .doc(FirebaseAuth.instance.currentUser!.uid)
+              .update({
+            "phoneNumber": phoneNumber,
+          });
           Navigator.pushAndRemoveUntil(
             context,
             FadeRoute(
@@ -1785,15 +2145,12 @@ Future verifyUser({
             ),
             (route) => false,
           );
-        } else {
-          _firestore.collection("Users").doc(result.user!.uid).set({
-            "phoneNumber": phoneNumber,
-            "password": password,
-            "name": name,
-            "mail": mail,
-            "uid": result.user!.uid,
-            "signUpDate": FieldValue.serverTimestamp(),
-          }).whenComplete(() {
+        });
+      } else {
+        await _auth
+            .signInWithCredential(phoneAuthCredential)
+            .then((result) async {
+          if (isLogIn) {
             Navigator.pushAndRemoveUntil(
               context,
               FadeRoute(
@@ -1801,29 +2158,53 @@ Future verifyUser({
               ),
               (route) => false,
             );
-          });
-        }
-      }).catchError((e) {
-        if (e.code == 'too-many-requests') {
-          showDialog(
-              context: context,
-              builder: (context) {
-                return AlertDialog(
-                  title: Text(
-                      'Çok fazla sayıda deneme yaptığınız için giriş işlemleriniz bir süre askıya alındı.'),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                        Navigator.pop(context);
-                      },
-                      child: Text('Tamam'),
-                    ),
-                  ],
+          } else {
+            await FirebaseMessaging.instance.getToken().then((fcmToken) async {
+              await _firestore.collection("Users").doc(result.user!.uid).set({
+                "phoneNumber": phoneNumber,
+                "realName": realName,
+                "idNo": idNo,
+                "address": address,
+                "password": password,
+                "name": name,
+                "mail": mail,
+                "uid": result.user!.uid,
+                "allowNotifications": true,
+                "fcmToken": fcmToken,
+                "signUpDate": FieldValue.serverTimestamp(),
+              }).whenComplete(() {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  FadeRoute(
+                    page: MainPage(),
+                  ),
+                  (route) => false,
                 );
               });
-        }
-      });
+            });
+          }
+        }).catchError((e) {
+          if (e.code == 'too-many-requests') {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: Text(
+                        'Çok fazla sayıda deneme yaptığınız için giriş işlemleriniz bir süre askıya alındı.'),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                        },
+                        child: Text('Tamam'),
+                      ),
+                    ],
+                  );
+                });
+          }
+        });
+      }
     },
     verificationFailed: (FirebaseAuthException authException) {
       print("AUTH EXCEPTION CODE:" + authException.code);
@@ -1878,6 +2259,10 @@ Future verifyUser({
             name: name,
             mail: mail,
             password: password,
+            isUpdate: isUpdate,
+            address: address,
+            idNo: idNo,
+            realName: realName,
           ),
         ),
       );

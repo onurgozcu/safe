@@ -10,6 +10,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:safe/ChatScreen.dart';
 import 'package:safe/FadeRoute.dart';
+import 'package:safe/NotificationHandler.dart';
 import 'package:safe/constants.dart';
 
 import 'MainPage.dart';
@@ -233,10 +234,29 @@ class _ShoppingPageState extends State<ShoppingPage> {
                                                       ]),
                                                       "state":
                                                           "Ödeme bekleniyor",
-                                                    }).whenComplete(() {
-                                                      _refCodeController
-                                                          .clear();
-                                                      Navigator.pop(context);
+                                                    }).whenComplete(() async {
+                                                      await _firestore
+                                                          .collection("Users")
+                                                          .doc(value.docs[0]
+                                                              .data()["seller"])
+                                                          .get()
+                                                          .then(
+                                                              (userData) async {
+                                                        if (userData.data()![
+                                                            "allowNotifications"]) {
+                                                          await NotificationHandler
+                                                              .sendNotification(
+                                                                  fcmToken: userData
+                                                                          .data()![
+                                                                      "fcmToken"],
+                                                                  message:
+                                                                      "Alıcı odaya katıldı.");
+                                                        }
+
+                                                        _refCodeController
+                                                            .clear();
+                                                        Navigator.pop(context);
+                                                      });
                                                     });
                                                   }
                                                 } else {
@@ -530,10 +550,29 @@ class _ShoppingPageState extends State<ShoppingPage> {
                                                       ]),
                                                       "state":
                                                           "Ödeme bekleniyor",
-                                                    }).whenComplete(() {
-                                                      _refCodeController
-                                                          .clear();
-                                                      Navigator.pop(context);
+                                                    }).whenComplete(() async {
+                                                      await _firestore
+                                                          .collection("Users")
+                                                          .doc(value.docs[0]
+                                                              .data()["seller"])
+                                                          .get()
+                                                          .then(
+                                                              (userData) async {
+                                                        if (userData.data()![
+                                                            "allowNotifications"]) {
+                                                          await NotificationHandler
+                                                              .sendNotification(
+                                                                  fcmToken: userData
+                                                                          .data()![
+                                                                      "fcmToken"],
+                                                                  message:
+                                                                      "Alıcı odaya katıldı.");
+                                                        }
+
+                                                        _refCodeController
+                                                            .clear();
+                                                        Navigator.pop(context);
+                                                      });
                                                     });
                                                   }
                                                 } else {
@@ -847,7 +886,7 @@ class _ShoppingPageState extends State<ShoppingPage> {
                                                     color: itemList[index]
                                                                     .data()![
                                                                 "state"] ==
-                                                            "Alıcı Bekleniyor"
+                                                            "Alıcı bekleniyor"
                                                         ? Colors.white
                                                         : (itemList[index].data()![
                                                                     "state"] ==
@@ -875,7 +914,7 @@ class _ShoppingPageState extends State<ShoppingPage> {
                                                     child: Text(
                                                       itemList[index].data()![
                                                                   "state"] ==
-                                                              "Alıcı Bekleniyor"
+                                                              "Alıcı bekleniyor"
                                                           ? ""
                                                           : (itemList[index]
                                                                           .data()![
@@ -899,7 +938,7 @@ class _ShoppingPageState extends State<ShoppingPage> {
                                                         color: itemList[index]
                                                                         .data()![
                                                                     "state"] ==
-                                                                "Alıcı Bekleniyor"
+                                                                "Alıcı bekleniyor"
                                                             ? Color(0xFFFFA841)
                                                             : (itemList[index]
                                                                             .data()![
@@ -1088,11 +1127,34 @@ class _ShoppingPageState extends State<ShoppingPage> {
                                                             ]),
                                                             "state":
                                                                 "Ödeme bekleniyor",
-                                                          }).whenComplete(() {
-                                                            _refCodeController
-                                                                .clear();
-                                                            Navigator.pop(
-                                                                context);
+                                                          }).whenComplete(
+                                                                  () async {
+                                                            await _firestore
+                                                                .collection(
+                                                                    "Users")
+                                                                .doc(value
+                                                                        .docs[0]
+                                                                        .data()[
+                                                                    "seller"])
+                                                                .get()
+                                                                .then(
+                                                                    (userData) async {
+                                                              if (userData
+                                                                      .data()![
+                                                                  "allowNotifications"]) {
+                                                                await NotificationHandler.sendNotification(
+                                                                    fcmToken: userData
+                                                                            .data()![
+                                                                        "fcmToken"],
+                                                                    message:
+                                                                        "Alıcı odaya katıldı.");
+                                                              }
+
+                                                              _refCodeController
+                                                                  .clear();
+                                                              Navigator.pop(
+                                                                  context);
+                                                            });
                                                           });
                                                         }
                                                       } else {
@@ -1313,7 +1375,7 @@ class _ShoppingPageState extends State<ShoppingPage> {
                                                     color: itemList[index]
                                                                     .data()![
                                                                 "state"] ==
-                                                            "Alıcı Bekleniyor"
+                                                            "Alıcı bekleniyor"
                                                         ? Colors.white
                                                         : (itemList[index].data()![
                                                                     "state"] ==
@@ -1341,7 +1403,7 @@ class _ShoppingPageState extends State<ShoppingPage> {
                                                     child: Text(
                                                       itemList[index].data()![
                                                                   "state"] ==
-                                                              "Alıcı Bekleniyor"
+                                                              "Alıcı bekleniyor"
                                                           ? ""
                                                           : (itemList[index]
                                                                           .data()![
@@ -1365,7 +1427,7 @@ class _ShoppingPageState extends State<ShoppingPage> {
                                                         color: itemList[index]
                                                                         .data()![
                                                                     "state"] ==
-                                                                "Alıcı Bekleniyor"
+                                                                "Alıcı bekleniyor"
                                                             ? Color(0xFFFFA841)
                                                             : (itemList[index]
                                                                             .data()![
@@ -1550,11 +1612,33 @@ class _ShoppingPageState extends State<ShoppingPage> {
                                                           ]),
                                                           "state":
                                                               "Ödeme bekleniyor",
-                                                        }).whenComplete(() {
-                                                          _refCodeController
-                                                              .clear();
-                                                          Navigator.pop(
-                                                              context);
+                                                        }).whenComplete(
+                                                                () async {
+                                                          await _firestore
+                                                              .collection(
+                                                                  "Users")
+                                                              .doc(value.docs[0]
+                                                                      .data()[
+                                                                  "seller"])
+                                                              .get()
+                                                              .then(
+                                                                  (userData) async {
+                                                            if (userData
+                                                                    .data()![
+                                                                "allowNotifications"]) {
+                                                              await NotificationHandler.sendNotification(
+                                                                  fcmToken: userData
+                                                                          .data()![
+                                                                      "fcmToken"],
+                                                                  message:
+                                                                      "Alıcı odaya katıldı.");
+                                                            }
+
+                                                            _refCodeController
+                                                                .clear();
+                                                            Navigator.pop(
+                                                                context);
+                                                          });
                                                         });
                                                       }
                                                     } else {
@@ -1766,7 +1850,7 @@ class _ShoppingPageState extends State<ShoppingPage> {
                                                   BorderRadius.circular(2.0),
                                               color: itemList[index]
                                                           .data()!["state"] ==
-                                                      "Alıcı Bekleniyor"
+                                                      "Alıcı bekleniyor"
                                                   ? Colors.white
                                                   : (itemList[index].data()![
                                                               "state"] ==
@@ -1794,7 +1878,7 @@ class _ShoppingPageState extends State<ShoppingPage> {
                                               child: Text(
                                                 itemList[index]
                                                             .data()!["state"] ==
-                                                        "Alıcı Bekleniyor"
+                                                        "Alıcı bekleniyor"
                                                     ? ""
                                                     : (itemList[index].data()![
                                                                 "state"] ==
@@ -1818,7 +1902,7 @@ class _ShoppingPageState extends State<ShoppingPage> {
                                                   fontSize: 11,
                                                   color: itemList[index].data()![
                                                               "state"] ==
-                                                          "Alıcı Bekleniyor"
+                                                          "Alıcı bekleniyor"
                                                       ? Color(0xFFFFA841)
                                                       : (itemList[index].data()![
                                                                   "state"] ==
@@ -2775,7 +2859,7 @@ class _RoomCreatingPageState extends State<RoomCreatingPage> {
                           "productLink": _productLinkController.text,
                           "cargoDate": Timestamp.fromDate(cargoDate),
                           "imageURLs": imageURLs,
-                          "state": "Alıcı Bekleniyor",
+                          "state": "Alıcı bekleniyor",
                           "date": FieldValue.serverTimestamp(),
                         }).whenComplete(() {
                           Navigator.pushAndRemoveUntil(
@@ -2843,6 +2927,8 @@ class _RoomPageState extends State<RoomPage> {
     super.initState();
   }
 
+  TextEditingController _cargoTrackingCodeController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -2872,34 +2958,36 @@ class _RoomPageState extends State<RoomPage> {
           ),
         ),
       ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(top: 32.0),
-        child: Container(
-          height: 65.0,
-          width: 65.0,
-          child: FittedBox(
-            child: FloatingActionButton(
-                elevation: 4.0,
-                child: Padding(
-                  padding: const EdgeInsets.all(14.0),
-                  child: Image.asset(
-                    "assets/images/navBarUnselectedMain.png",
-                  ),
-                ),
-                backgroundColor: kDarkBlue,
-                onPressed: () {
-                  Navigator.pushAndRemoveUntil(
-                      context,
-                      FadeRoute(
-                        page: MainPage(
-                          initialIndex: 2,
+      floatingActionButton: MediaQuery.of(context).viewInsets.bottom == 0.0
+          ? Padding(
+              padding: const EdgeInsets.only(top: 32.0),
+              child: Container(
+                height: 65.0,
+                width: 65.0,
+                child: FittedBox(
+                  child: FloatingActionButton(
+                      elevation: 4.0,
+                      child: Padding(
+                        padding: const EdgeInsets.all(14.0),
+                        child: Image.asset(
+                          "assets/images/navBarUnselectedMain.png",
                         ),
                       ),
-                      (route) => false);
-                }),
-          ),
-        ),
-      ),
+                      backgroundColor: kDarkBlue,
+                      onPressed: () {
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            FadeRoute(
+                              page: MainPage(
+                                initialIndex: 2,
+                              ),
+                            ),
+                            (route) => false);
+                      }),
+                ),
+              ),
+            )
+          : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: Container(
         width: MediaQuery.of(context).size.width,
@@ -3403,54 +3491,55 @@ class _RoomPageState extends State<RoomPage> {
             Color gray = Color(0xFFE2E2E2);
             Color orange = Color(0xFFFFA841);
             Color green = Color(0xFF139874);
-            return SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage(
-                          "assets/images/roomPageTopBg.png",
-                        ),
-                        alignment: Alignment.topLeft,
-                        fit: BoxFit.fitWidth,
-                      ),
-                    ),
+            return StreamBuilder<DocumentSnapshot<Map>>(
+                stream: _firestore
+                    .collection("Users")
+                    .doc(isSeller
+                        ? roomSnapshot.data!.data()!["buyer"]
+                        : roomSnapshot.data!.data()!["seller"])
+                    .snapshots(),
+                builder: (context, otherUserSnapshot) {
+                  if (!otherUserSnapshot.hasData) {
+                    return Container();
+                  }
+                  return SingleChildScrollView(
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
                       crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        SizedBox(
-                          height: MediaQuery.of(context).size.width * 0.14,
-                        ),
-                        Text(
-                          "Güvenli alışveriş",
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            fontSize: 26.0,
-                            height: 1.2,
-                            fontWeight: FontWeight.bold,
-                            color: kDarkBlue,
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage(
+                                "assets/images/roomPageTopBg.png",
+                              ),
+                              alignment: Alignment.topLeft,
+                              fit: BoxFit.fitWidth,
+                            ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 12.0,
-                        ),
-                        StreamBuilder<DocumentSnapshot<Map>>(
-                            stream: _firestore
-                                .collection("Users")
-                                .doc(isSeller
-                                    ? roomSnapshot.data!.data()!["buyer"]
-                                    : roomSnapshot.data!.data()!["seller"])
-                                .snapshots(),
-                            builder: (context, otherUserSnapshot) {
-                              if (!otherUserSnapshot.hasData) {
-                                return Container();
-                              }
-                              return Container(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.width * 0.14,
+                              ),
+                              Text(
+                                "Güvenli alışveriş",
+                                textAlign: TextAlign.start,
+                                style: TextStyle(
+                                  fontSize: 26.0,
+                                  height: 1.2,
+                                  fontWeight: FontWeight.bold,
+                                  color: kDarkBlue,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 12.0,
+                              ),
+                              Container(
                                 constraints: BoxConstraints(
                                     maxWidth:
                                         MediaQuery.of(context).size.width -
@@ -3481,2074 +3570,2239 @@ class _RoomPageState extends State<RoomPage> {
                                     ],
                                   ),
                                 ),
-                              );
-                            }),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.width * 0.07,
-                        ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.92,
-                          height: MediaQuery.of(context).size.width * 0.55,
-                          child: Stack(
-                            children: [
-                              Align(
-                                alignment: Alignment.bottomRight,
-                                child: Image.asset(
-                                  isSeller
-                                      ? "assets/images/roomPageWomanDraw.png"
-                                      : "assets/images/roomPageManDraw.png",
-                                  height:
-                                      MediaQuery.of(context).size.width * 0.55,
+                              ),
+                              SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.width * 0.07,
+                              ),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.92,
+                                height:
+                                    MediaQuery.of(context).size.width * 0.55,
+                                child: Stack(
+                                  children: [
+                                    Align(
+                                      alignment: Alignment.bottomRight,
+                                      child: Image.asset(
+                                        isSeller
+                                            ? "assets/images/roomPageWomanDraw.png"
+                                            : "assets/images/roomPageManDraw.png",
+                                        height:
+                                            MediaQuery.of(context).size.width *
+                                                0.55,
+                                      ),
+                                    ),
+                                    Align(
+                                      alignment: Alignment.bottomLeft,
+                                      child: Container(
+                                        height:
+                                            MediaQuery.of(context).size.width *
+                                                0.5,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.6,
+                                        decoration: BoxDecoration(
+                                          color: Color(0xFF4379B6),
+                                          borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(10.0),
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black
+                                                  .withOpacity(0.25),
+                                              offset: Offset(3.0, 0),
+                                              blurRadius: 3.0,
+                                            ),
+                                          ],
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 8.0),
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                FontAwesomeIcons.infoCircle,
+                                                color: Colors.white,
+                                                size: 32.0,
+                                              ),
+                                              SizedBox(
+                                                width: 8.0,
+                                              ),
+                                              SingleChildScrollView(
+                                                child: Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(vertical: 8.0),
+                                                  child: Container(
+                                                    width:
+                                                        (MediaQuery.of(context)
+                                                                    .size
+                                                                    .width *
+                                                                0.6) -
+                                                            56.0,
+                                                    child: Text(
+                                                      isSeller
+                                                          ? "Alışverişine dair bütün işlemleri gerçekleştirebileceğin ekrandasın. Aşağıda yer alan butonlar sayesinde alıcı ile sohbet edebilir, kargo bilgilerini girebilir ve bir sorun yaşanması halinde bize ulaşabilirsin. Alışverişinin hangi aşamada olduğunu ise adım adım takip edebilirsin. Bir sonraki adımda neler yapman gerektiğini bilmiyorsan bütün gerekli bilgilerin yer aldığı İnfo & SSS sekmemize göz atabilirsin."
+                                                          : 'Alışverişine dair bütün işlemleri gerçekleştirebileceğin ekrandasın. Aşağıda yer alan butonlar sayesinde satıcı ile sohbet edebilir, ödemelerini gerçekleştirebilir ve bir sorun yaşanması halinde bize ulaşabilirsin. Alışverişinin hangi aşamada olduğunu ise adım adım takip edebilirsin.\n\nBir sonraki adımda neler yapman gerektiğini bilmiyorsan bütün gerekli bilgilerin yer aldığı İnfo & SSS sekmemize göz atabilirsin.',
+                                                      textAlign:
+                                                          TextAlign.start,
+                                                      style: TextStyle(
+                                                        fontSize: 11.0,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color: Colors.white,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              Align(
-                                alignment: Alignment.bottomLeft,
-                                child: Container(
-                                  height:
-                                      MediaQuery.of(context).size.width * 0.5,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.6,
-                                  decoration: BoxDecoration(
-                                    color: Color(0xFF4379B6),
-                                    borderRadius: BorderRadius.vertical(
-                                      top: Radius.circular(10.0),
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.25),
-                                        offset: Offset(3.0, 0),
-                                        blurRadius: 3.0,
+                            ],
+                          ),
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(14.0),
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  blurRadius: 4.0,
+                                  color: Colors.black.withOpacity(0.3),
+                                )
+                              ]),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        bottomIndex = 0;
+                                      });
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(top: 18.0),
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            "Alışveriş Süreci",
+                                            style: TextStyle(
+                                              fontSize: 13.0,
+                                              fontWeight: FontWeight.w700,
+                                              color: bottomIndex == 0
+                                                  ? kDarkBlue
+                                                  : Color(0xFFB7B1B1),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 8.0,
+                                          ),
+                                          bottomIndex == 0
+                                              ? Container(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                      2,
+                                                  height: 3.0,
+                                                  color: kButtonBlue,
+                                                )
+                                              : Container(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                      2,
+                                                  height: 0.2,
+                                                  decoration:
+                                                      BoxDecoration(boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.black,
+                                                      blurRadius: 0.5,
+                                                    ),
+                                                  ]),
+                                                ),
+                                        ],
                                       ),
-                                    ],
+                                    ),
                                   ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8.0),
-                                    child: Row(
+                                  InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        bottomIndex = 1;
+                                      });
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(top: 18.0),
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            "Ürün Bilgisi",
+                                            style: TextStyle(
+                                              fontSize: 13.0,
+                                              fontWeight: FontWeight.w700,
+                                              color: bottomIndex == 1
+                                                  ? kDarkBlue
+                                                  : Color(0xFFB7B1B1),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 8.0,
+                                          ),
+                                          bottomIndex == 1
+                                              ? Container(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                      2,
+                                                  height: 3.0,
+                                                  color: kButtonBlue,
+                                                )
+                                              : Container(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                      2,
+                                                  height: 0.2,
+                                                  decoration:
+                                                      BoxDecoration(boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.black,
+                                                      blurRadius: 0.5,
+                                                    ),
+                                                  ]),
+                                                ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 12.0,
+                              ),
+                              bottomIndex == 0
+                                  ? Column(
                                       children: [
-                                        Icon(
-                                          FontAwesomeIcons.infoCircle,
-                                          color: Colors.white,
-                                          size: 32.0,
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 12.0,
+                                              left: 32.0,
+                                              right: 32.0),
+                                          child: Row(
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    bottom: 3.0),
+                                                child: Icon(
+                                                  FontAwesomeIcons
+                                                      .solidCheckCircle,
+                                                  color: Color(0xFF139874),
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: Container(
+                                                  height: 3.0,
+                                                  color: roomSnapshot.data!
+                                                                  .data()![
+                                                              "state"] ==
+                                                          "Alıcı bekleniyor"
+                                                      ? gray
+                                                      : (roomSnapshot.data!
+                                                                      .data()![
+                                                                  "state"] ==
+                                                              "Ödeme bekleniyor"
+                                                          ? orange
+                                                          : green),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    bottom: 3.0),
+                                                child: Icon(
+                                                  FontAwesomeIcons
+                                                      .solidCheckCircle,
+                                                  color: roomSnapshot.data!
+                                                                  .data()![
+                                                              "state"] ==
+                                                          "Alıcı bekleniyor"
+                                                      ? gray
+                                                      : (roomSnapshot.data!
+                                                                      .data()![
+                                                                  "state"] ==
+                                                              "Ödeme bekleniyor"
+                                                          ? orange
+                                                          : green),
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: Container(
+                                                  height: 3.0,
+                                                  color: (roomSnapshot.data!
+                                                                      .data()![
+                                                                  "state"] ==
+                                                              "Ödeme bekleniyor" ||
+                                                          roomSnapshot.data!
+                                                                      .data()![
+                                                                  "state"] ==
+                                                              "Alıcı bekleniyor")
+                                                      ? gray
+                                                      : green,
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    bottom: 3.0),
+                                                child: Icon(
+                                                  FontAwesomeIcons
+                                                      .solidCheckCircle,
+                                                  color: (roomSnapshot.data!
+                                                                      .data()![
+                                                                  "state"] ==
+                                                              "Ödeme bekleniyor" ||
+                                                          roomSnapshot.data!
+                                                                      .data()![
+                                                                  "state"] ==
+                                                              "Alıcı bekleniyor")
+                                                      ? gray
+                                                      : green,
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: Container(
+                                                  height: 3.0,
+                                                  color: (roomSnapshot.data!
+                                                                      .data()![
+                                                                  "state"] ==
+                                                              "Ödeme bekleniyor" ||
+                                                          roomSnapshot.data!
+                                                                      .data()![
+                                                                  "state"] ==
+                                                              "Alıcı bekleniyor")
+                                                      ? gray
+                                                      : (roomSnapshot.data!
+                                                                      .data()![
+                                                                  "state"] ==
+                                                              "Kargo bekleniyor"
+                                                          ? orange
+                                                          : green),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    bottom: 3.0),
+                                                child: Icon(
+                                                  FontAwesomeIcons
+                                                      .solidCheckCircle,
+                                                  color: (roomSnapshot.data!
+                                                                      .data()![
+                                                                  "state"] ==
+                                                              "Ödeme bekleniyor" ||
+                                                          roomSnapshot.data!
+                                                                      .data()![
+                                                                  "state"] ==
+                                                              "Alıcı bekleniyor")
+                                                      ? gray
+                                                      : (roomSnapshot.data!
+                                                                      .data()![
+                                                                  "state"] ==
+                                                              "Kargo bekleniyor"
+                                                          ? orange
+                                                          : green),
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: Container(
+                                                  height: 3.0,
+                                                  color: roomSnapshot.data!
+                                                                  .data()![
+                                                              "state"] ==
+                                                          "Onay bekleniyor"
+                                                      ? orange
+                                                      : (roomSnapshot.data!
+                                                                      .data()![
+                                                                  "state"] ==
+                                                              "Tamamlandı"
+                                                          ? green
+                                                          : gray),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    bottom: 3.0),
+                                                child: Icon(
+                                                  FontAwesomeIcons
+                                                      .solidCheckCircle,
+                                                  color: roomSnapshot.data!
+                                                                  .data()![
+                                                              "state"] ==
+                                                          "Onay bekleniyor"
+                                                      ? orange
+                                                      : (roomSnapshot.data!
+                                                                      .data()![
+                                                                  "state"] ==
+                                                              "Tamamlandı"
+                                                          ? green
+                                                          : gray),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                         SizedBox(
-                                          width: 8.0,
+                                          height: 6.0,
                                         ),
-                                        SingleChildScrollView(
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 8.0),
-                                            child: Container(
-                                              width: (MediaQuery.of(context)
-                                                          .size
-                                                          .width *
-                                                      0.6) -
-                                                  56.0,
-                                              child: Text(
-                                                isSeller
-                                                    ? "Alışverişine dair bütün işlemleri gerçekleştirebileceğin ekrandasın. Aşağıda yer alan butonlar sayesinde alıcı ile sohbet edebilir, kargo bilgilerini girebilir ve bir sorun yaşanması halinde bize ulaşabilirsin. Alışverişinin hangi aşamada olduğunu ise adım adım takip edebilirsin. Bir sonraki adımda neler yapman gerektiğini bilmiyorsan bütün gerekli bilgilerin yer aldığı İnfo & SSS sekmemize göz atabilirsin."
-                                                    : 'Alışverişine dair bütün işlemleri gerçekleştirebileceğin ekrandasın. Aşağıda yer alan butonlar sayesinde satıcı ile sohbet edebilir, ödemelerini gerçekleştirebilir ve bir sorun yaşanması halinde bize ulaşabilirsin. Alışverişinin hangi aşamada olduğunu ise adım adım takip edebilirsin.\n\nBir sonraki adımda neler yapman gerektiğini bilmiyorsan bütün gerekli bilgilerin yer aldığı İnfo & SSS sekmemize göz atabilirsin.',
-                                                textAlign: TextAlign.start,
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 18.0, right: 20.0),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                "Alıcı ve Satıcı\nBuluştu.",
                                                 style: TextStyle(
-                                                  fontSize: 11.0,
+                                                  fontSize: 8,
                                                   fontWeight: FontWeight.w500,
-                                                  color: Colors.white,
+                                                  color: Color(0xFF139874),
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                              Text(
+                                                "Alıcı Ödemesi\nBekleniyor.",
+                                                style: TextStyle(
+                                                  fontSize: 8,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: roomSnapshot.data!
+                                                                  .data()![
+                                                              "state"] ==
+                                                          "Alıcı bekleniyor"
+                                                      ? gray
+                                                      : (roomSnapshot.data!
+                                                                      .data()![
+                                                                  "state"] ==
+                                                              "Ödeme bekleniyor"
+                                                          ? orange
+                                                          : green),
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                              Text(
+                                                "Alıcı Ödemesi\nAlındı!",
+                                                style: TextStyle(
+                                                  fontSize: 8,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: (roomSnapshot.data!
+                                                                      .data()![
+                                                                  "state"] ==
+                                                              "Ödeme bekleniyor" ||
+                                                          roomSnapshot.data!
+                                                                      .data()![
+                                                                  "state"] ==
+                                                              "Alıcı bekleniyor")
+                                                      ? gray
+                                                      : green,
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                              Text(
+                                                "Kargo\nAşamasında!",
+                                                style: TextStyle(
+                                                  fontSize: 8,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: (roomSnapshot.data!
+                                                                      .data()![
+                                                                  "state"] ==
+                                                              "Ödeme bekleniyor" ||
+                                                          roomSnapshot.data!
+                                                                      .data()![
+                                                                  "state"] ==
+                                                              "Alıcı bekleniyor")
+                                                      ? gray
+                                                      : (roomSnapshot.data!
+                                                                      .data()![
+                                                                  "state"] ==
+                                                              "Kargo bekleniyor"
+                                                          ? orange
+                                                          : green),
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                              Text(
+                                                "Alışveriş\nTamamlandı!",
+                                                style: TextStyle(
+                                                  fontSize: 8,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: roomSnapshot.data!
+                                                                  .data()![
+                                                              "state"] ==
+                                                          "Onay bekleniyor"
+                                                      ? orange
+                                                      : (roomSnapshot.data!
+                                                                      .data()![
+                                                                  "state"] ==
+                                                              "Tamamlandı"
+                                                          ? green
+                                                          : gray),
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 12.0,
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Image.asset(
+                                              "assets/images/roomPageClockIcon.png",
+                                              height: 48.0,
+                                              width: 48.0,
+                                            ),
+                                            SizedBox(
+                                              width: 8.0,
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 8.0),
+                                              child: Container(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.58,
+                                                child: Text(
+                                                  isSeller
+                                                      ? "Alıcı ödeme işlemini gerçekleştirdikten sonra ilgili ürünü kargolaman ve kargo takip bilgisini uygulamamıza girmen için 72 saatiniz olduğunu unutmayın."
+                                                      : 'Alıcısı olduğunuz ürünün ödemesini\ngerçekleştirmek için 72 saatiniz olduğunu unutmayın.\nÖdemesi gerçekleştirilmeyen\nişlemler satıcı itirazıyla iptal\nedilecektir.',
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                    fontSize: 11.5,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Color(0xFF8F8F8F),
+                                                  ),
                                                 ),
                                               ),
                                             ),
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 12.0,
+                                        ),
+                                        ElevatedButton(
+                                          style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateProperty.all(
+                                                    Colors.white),
+                                            shape: MaterialStateProperty.all(
+                                              RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(20.0),
+                                                side: BorderSide(
+                                                  color: Color(0xFFEAEAEA),
+                                                ),
+                                              ),
+                                            ),
+                                            shadowColor:
+                                                MaterialStateProperty.all(
+                                              roomSnapshot.data!
+                                                          .data()!["state"] ==
+                                                      "Ödeme bekleniyor"
+                                                  ? Color(0xFF48D1AB)
+                                                      .withOpacity(0.3)
+                                                  : (roomSnapshot.data!.data()![
+                                                              "state"] ==
+                                                          "Kargo bekleniyor"
+                                                      ? Color(0xFF89AEFB)
+                                                          .withOpacity(0.3)
+                                                      : Color(0xFF48D1AB)
+                                                          .withOpacity(0.3)),
+                                            ),
+                                            elevation:
+                                                MaterialStateProperty.all(10.0),
+                                          ),
+                                          onPressed: isSeller
+                                              ? ((roomSnapshot.data!
+                                                          .data()!["state"] ==
+                                                      "Ödeme bekleniyor")
+                                                  ? null
+                                                  : (roomSnapshot.data!.data()![
+                                                              "state"] ==
+                                                          "Kargo bekleniyor"
+                                                      ? () {
+                                                          showDialog(
+                                                              context: context,
+                                                              builder:
+                                                                  (context) {
+                                                                return AlertDialog(
+                                                                  content:
+                                                                      TextField(
+                                                                    controller:
+                                                                        _cargoTrackingCodeController,
+                                                                  ),
+                                                                  actions: [
+                                                                    ElevatedButton(
+                                                                      onPressed:
+                                                                          () async {
+                                                                        await roomSnapshot
+                                                                            .data!
+                                                                            .reference
+                                                                            .update({
+                                                                          "cargoTrackingCode":
+                                                                              _cargoTrackingCodeController.text,
+                                                                        });
+                                                                        if (otherUserSnapshot
+                                                                            .data!
+                                                                            .data()!["allowNotifications"]!) {
+                                                                          await NotificationHandler.sendNotification(
+                                                                              fcmToken: otherUserSnapshot.data!.data()!["fcmToken"],
+                                                                              message: "Ürününüz kargoya verildi.");
+                                                                        }
+                                                                        await roomSnapshot
+                                                                            .data!
+                                                                            .reference
+                                                                            .update({
+                                                                          "state":
+                                                                              "Onay bekleniyor"
+                                                                        });
+                                                                        Navigator.pop(
+                                                                            context);
+                                                                      },
+                                                                      child: Text(
+                                                                          "Tamam"),
+                                                                    ),
+                                                                    ElevatedButton(
+                                                                      onPressed:
+                                                                          () {
+                                                                        _cargoTrackingCodeController
+                                                                            .clear();
+                                                                        Navigator.pop(
+                                                                            context);
+                                                                      },
+                                                                      child: Text(
+                                                                          "İptal"),
+                                                                    ),
+                                                                  ],
+                                                                );
+                                                              });
+                                                        }
+                                                      : null))
+                                              : (roomSnapshot.data!
+                                                          .data()!["state"] ==
+                                                      "Ödeme bekleniyor"
+                                                  ? () async {
+                                                      //TODO: PAYMENT PAGE
+                                                      if (otherUserSnapshot
+                                                              .data!
+                                                              .data()![
+                                                          "allowNotifications"]) {
+                                                        await NotificationHandler
+                                                            .sendNotification(
+                                                                fcmToken: otherUserSnapshot
+                                                                        .data!
+                                                                        .data()![
+                                                                    "fcmToken"],
+                                                                message:
+                                                                    "Alıcı ödemeyi yaptı.");
+                                                      }
+
+                                                      await roomSnapshot
+                                                          .data!.reference
+                                                          .update({
+                                                        "state":
+                                                            "Kargo bekleniyor"
+                                                      });
+                                                    }
+                                                  : (roomSnapshot.data!.data()![
+                                                              "state"] ==
+                                                          "Kargo bekleniyor"
+                                                      ? null
+                                                      : () async {
+                                                          if (otherUserSnapshot
+                                                                  .data!
+                                                                  .data()![
+                                                              "allowNotifications"]) {
+                                                            await NotificationHandler.sendNotification(
+                                                                fcmToken: otherUserSnapshot
+                                                                        .data!
+                                                                        .data()![
+                                                                    "fcmToken"],
+                                                                message:
+                                                                    "Alıcı siparişi onayladı.");
+                                                          }
+                                                          await roomSnapshot
+                                                              .data!.reference
+                                                              .update({
+                                                            "state":
+                                                                "Tamamlandı"
+                                                          });
+                                                        })),
+                                          child: Container(
+                                            alignment: Alignment.center,
+                                            width: 220,
+                                            height: 45,
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                roomSnapshot.data!
+                                                            .data()!["state"] ==
+                                                        "Ödeme bekleniyor"
+                                                    ? Icon(
+                                                        FontAwesomeIcons
+                                                            .solidCreditCard,
+                                                        size: 20.0,
+                                                        color:
+                                                            Color(0xFF48D1AB),
+                                                      )
+                                                    : (roomSnapshot.data!
+                                                                    .data()![
+                                                                "state"] ==
+                                                            "Kargo bekleniyor"
+                                                        ? Image.asset(
+                                                            "assets/images/roomCargoButtonIcon.png",
+                                                            width: 20.0,
+                                                          )
+                                                        : Icon(
+                                                            FontAwesomeIcons
+                                                                .check,
+                                                            size: 20.0,
+                                                            color: Color(
+                                                                0xFF48D1AB))),
+                                                SizedBox(
+                                                  width: 16.0,
+                                                ),
+                                                isSeller
+                                                    ? (roomSnapshot.data!
+                                                                    .data()![
+                                                                "state"] ==
+                                                            "Ödeme bekleniyor"
+                                                        ? Text(
+                                                            "Ödeme Bekleniyor",
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: TextStyle(
+                                                              color: Color(
+                                                                  0xFF48D1AB),
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              fontSize: 12,
+                                                            ),
+                                                          )
+                                                        : (roomSnapshot.data!
+                                                                        .data()![
+                                                                    "state"] ==
+                                                                "Kargo bekleniyor"
+                                                            ? Text(
+                                                                "Kargo Bilgileri Girişi",
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
+                                                                style:
+                                                                    TextStyle(
+                                                                  color: Color(
+                                                                      0xFF89AEFB),
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  fontSize: 12,
+                                                                ),
+                                                              )
+                                                            : (roomSnapshot.data!
+                                                                            .data()![
+                                                                        "state"] ==
+                                                                    "Onay bekleniyor"
+                                                                ? Text(
+                                                                    "Onay Bekleniyor",
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .center,
+                                                                    style:
+                                                                        TextStyle(
+                                                                      color: Color(
+                                                                          0xFF48D1AB),
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      fontSize:
+                                                                          12,
+                                                                    ),
+                                                                  )
+                                                                : Text(
+                                                                    "Alışveriş Tamamlandı!",
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .center,
+                                                                    style:
+                                                                        TextStyle(
+                                                                      color: Color(
+                                                                          0xFF48D1AB),
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      fontSize:
+                                                                          10.5,
+                                                                    ),
+                                                                  ))))
+                                                    : (roomSnapshot.data!
+                                                                    .data()![
+                                                                "state"] ==
+                                                            "Ödeme bekleniyor"
+                                                        ? Text(
+                                                            "Ödeme Yap",
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: TextStyle(
+                                                              color: Color(
+                                                                  0xFF48D1AB),
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              fontSize: 12,
+                                                            ),
+                                                          )
+                                                        : (roomSnapshot.data!
+                                                                        .data()![
+                                                                    "state"] ==
+                                                                "Kargo bekleniyor"
+                                                            ? Text(
+                                                                "Kargo Bekleniyor",
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
+                                                                style:
+                                                                    TextStyle(
+                                                                  color: Color(
+                                                                      0xFF89AEFB),
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  fontSize: 12,
+                                                                ),
+                                                              )
+                                                            : (roomSnapshot.data!
+                                                                            .data()![
+                                                                        "state"] ==
+                                                                    "Onay bekleniyor"
+                                                                ? Text(
+                                                                    "Alışverişi Onayla",
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .center,
+                                                                    style:
+                                                                        TextStyle(
+                                                                      color: Color(
+                                                                          0xFF48D1AB),
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      fontSize:
+                                                                          12,
+                                                                    ),
+                                                                  )
+                                                                : Text(
+                                                                    "Alışveriş Tamamlandı!",
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .center,
+                                                                    style:
+                                                                        TextStyle(
+                                                                      color: Color(
+                                                                          0xFF48D1AB),
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      fontSize:
+                                                                          10.5,
+                                                                    ),
+                                                                  )))),
+                                                SizedBox(
+                                                  width: 16.0,
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ),
+                                        SizedBox(
+                                          height: 8.0,
+                                        ),
+                                        ElevatedButton(
+                                          style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateProperty.all(
+                                                    Colors.white),
+                                            shape: MaterialStateProperty.all(
+                                              RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(20.0),
+                                                side: BorderSide(
+                                                  color: Color(0xFFEAEAEA),
+                                                ),
+                                              ),
+                                            ),
+                                            shadowColor:
+                                                MaterialStateProperty.all(
+                                              Color(0xFF0877F7)
+                                                  .withOpacity(0.3),
+                                            ),
+                                            elevation:
+                                                MaterialStateProperty.all(10.0),
+                                          ),
+                                          onPressed: () {
+                                            Navigator.push(
+                                              context,
+                                              FadeRoute(
+                                                page: ChatScreen(
+                                                  item: roomSnapshot.data!
+                                                      .data()!,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          child: Container(
+                                            alignment: Alignment.center,
+                                            width: 220,
+                                            height: 45,
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Image.asset(
+                                                  "assets/images/roomMessagesIcon.png",
+                                                  width: 20.0,
+                                                ),
+                                                SizedBox(
+                                                  width: 16.0,
+                                                ),
+                                                Text(
+                                                  "Mesajlaşma Ekranı",
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                    color: Color(0xFF0877F7),
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 13,
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: 16.0,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 8.0,
+                                        ),
+                                        ElevatedButton(
+                                          style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateProperty.all(
+                                                    Colors.white),
+                                            shape: MaterialStateProperty.all(
+                                              RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(20.0),
+                                                side: BorderSide(
+                                                  color: Color(0xFFEAEAEA),
+                                                ),
+                                              ),
+                                            ),
+                                            shadowColor:
+                                                MaterialStateProperty.all(
+                                              Color(0xFFFE9ECC)
+                                                  .withOpacity(0.3),
+                                            ),
+                                            elevation:
+                                                MaterialStateProperty.all(10.0),
+                                          ),
+                                          onPressed:
+                                              roomSnapshot.data!
+                                                      .data()!
+                                                      .containsKey("problem")
+                                                  ? () {
+                                                      showDialog(
+                                                          context: context,
+                                                          builder: (context) {
+                                                            return AlertDialog(
+                                                              shape:
+                                                                  RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10.0),
+                                                                side:
+                                                                    BorderSide(
+                                                                  color: Color(
+                                                                      0xFFABCDF1),
+                                                                ),
+                                                              ),
+                                                              backgroundColor:
+                                                                  Color(
+                                                                      0xFFE5EFFA),
+                                                              content: Column(
+                                                                mainAxisSize:
+                                                                    MainAxisSize
+                                                                        .min,
+                                                                children: [
+                                                                  Row(
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .center,
+                                                                    children: [
+                                                                      Container(
+                                                                        decoration:
+                                                                            BoxDecoration(
+                                                                          color:
+                                                                              kButtonBlue,
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(6.0),
+                                                                        ),
+                                                                        child:
+                                                                            Padding(
+                                                                          padding:
+                                                                              const EdgeInsets.all(8.0),
+                                                                          child:
+                                                                              Icon(
+                                                                            FontAwesomeIcons.infoCircle,
+                                                                            color:
+                                                                                Colors.white,
+                                                                            size:
+                                                                                20.0,
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                      SizedBox(
+                                                                        width:
+                                                                            12.0,
+                                                                      ),
+                                                                      Text(
+                                                                        "Talebiniz iletildi!",
+                                                                        textAlign:
+                                                                            TextAlign.center,
+                                                                        style:
+                                                                            TextStyle(
+                                                                          fontSize:
+                                                                              18.0,
+                                                                          height:
+                                                                              1.2,
+                                                                          fontWeight:
+                                                                              FontWeight.bold,
+                                                                          color:
+                                                                              kDarkBlue,
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                  SizedBox(
+                                                                    height:
+                                                                        12.0,
+                                                                  ),
+                                                                  Text(
+                                                                    "Talebinizin sürecini Çözüm Merkezi kısmından takip edebilir, çözüm merkeziyle iletişime geçebilirsiniz.",
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .center,
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontSize:
+                                                                          12.0,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500,
+                                                                      color:
+                                                                          kDarkBlue,
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            );
+                                                          });
+                                                    }
+                                                  : () {
+                                                      TextEditingController
+                                                          _problemController =
+                                                          TextEditingController();
+                                                      String? selected;
+
+                                                      showModalBottomSheet(
+                                                          context: context,
+                                                          isScrollControlled:
+                                                              true,
+                                                          builder: (context) {
+                                                            return StatefulBuilder(
+                                                                builder: (context,
+                                                                    setState) {
+                                                              return Container(
+                                                                color: Color(
+                                                                    0xFF757575),
+                                                                child: Padding(
+                                                                  padding: const EdgeInsets
+                                                                          .symmetric(
+                                                                      horizontal:
+                                                                          8.0),
+                                                                  child:
+                                                                      Container(
+                                                                    decoration:
+                                                                        BoxDecoration(
+                                                                      color: Colors
+                                                                          .white,
+                                                                      borderRadius:
+                                                                          BorderRadius
+                                                                              .vertical(
+                                                                        top: Radius.circular(
+                                                                            20.0),
+                                                                      ),
+                                                                    ),
+                                                                    child:
+                                                                        Padding(
+                                                                      padding:
+                                                                          const EdgeInsets
+                                                                              .symmetric(
+                                                                        vertical:
+                                                                            16.0,
+                                                                        horizontal:
+                                                                            16.0,
+                                                                      ),
+                                                                      child:
+                                                                          Column(
+                                                                        mainAxisSize:
+                                                                            MainAxisSize.min,
+                                                                        children: [
+                                                                          Container(
+                                                                            width:
+                                                                                50.0,
+                                                                            height:
+                                                                                3.0,
+                                                                            decoration:
+                                                                                BoxDecoration(
+                                                                              color: kDarkBlue,
+                                                                              borderRadius: BorderRadius.circular(10.0),
+                                                                            ),
+                                                                          ),
+                                                                          SizedBox(
+                                                                            height:
+                                                                                8.0,
+                                                                          ),
+                                                                          Text(
+                                                                            "Sorun Bildir",
+                                                                            style:
+                                                                                TextStyle(
+                                                                              color: kDarkBlue,
+                                                                              fontWeight: FontWeight.w600,
+                                                                              fontSize: 16.0,
+                                                                            ),
+                                                                          ),
+                                                                          SizedBox(
+                                                                            height:
+                                                                                16.0,
+                                                                          ),
+                                                                          roomSnapshot.data!.data()!["buyer"] == _firebaseAuth.currentUser!.uid
+                                                                              ? Column(
+                                                                                  children: [
+                                                                                    GestureDetector(
+                                                                                      onTap: () {
+                                                                                        setState(() {
+                                                                                          selected = "İlan detaylarında hata söz konusu";
+                                                                                        });
+                                                                                      },
+                                                                                      child: Row(
+                                                                                        children: [
+                                                                                          Container(
+                                                                                            decoration: BoxDecoration(
+                                                                                              shape: BoxShape.circle,
+                                                                                              color: Color(0xFFE2E2E2),
+                                                                                            ),
+                                                                                            child: Padding(
+                                                                                              padding: const EdgeInsets.all(5.0),
+                                                                                              child: Container(
+                                                                                                height: 11.0,
+                                                                                                width: 11.0,
+                                                                                                decoration: BoxDecoration(
+                                                                                                  shape: BoxShape.circle,
+                                                                                                  color: selected == "İlan detaylarında hata söz konusu" ? kButtonBlue : Color(0xFFE2E2E2),
+                                                                                                ),
+                                                                                              ),
+                                                                                            ),
+                                                                                          ),
+                                                                                          SizedBox(
+                                                                                            width: 8.0,
+                                                                                          ),
+                                                                                          Text(
+                                                                                            "İlan detaylarında hata söz konusu",
+                                                                                            style: TextStyle(
+                                                                                              color: Color(0xFF2D3540),
+                                                                                              fontWeight: FontWeight.w500,
+                                                                                              fontSize: 14.0,
+                                                                                            ),
+                                                                                          ),
+                                                                                        ],
+                                                                                      ),
+                                                                                    ),
+                                                                                    SizedBox(
+                                                                                      height: 14.0,
+                                                                                    ),
+                                                                                    GestureDetector(
+                                                                                      onTap: () {
+                                                                                        setState(() {
+                                                                                          selected = "Ödeme süreci ile ilgili sorun yaşıyorum";
+                                                                                        });
+                                                                                      },
+                                                                                      child: Row(
+                                                                                        children: [
+                                                                                          Container(
+                                                                                            decoration: BoxDecoration(
+                                                                                              shape: BoxShape.circle,
+                                                                                              color: Color(0xFFE2E2E2),
+                                                                                            ),
+                                                                                            child: Padding(
+                                                                                              padding: const EdgeInsets.all(5.0),
+                                                                                              child: Container(
+                                                                                                height: 11.0,
+                                                                                                width: 11.0,
+                                                                                                decoration: BoxDecoration(
+                                                                                                  shape: BoxShape.circle,
+                                                                                                  color: selected == "Ödeme süreci ile ilgili sorun yaşıyorum" ? kButtonBlue : Color(0xFFE2E2E2),
+                                                                                                ),
+                                                                                              ),
+                                                                                            ),
+                                                                                          ),
+                                                                                          SizedBox(
+                                                                                            width: 8.0,
+                                                                                          ),
+                                                                                          Text(
+                                                                                            "Ödeme süreci ile ilgili sorun yaşıyorum",
+                                                                                            style: TextStyle(
+                                                                                              color: Color(0xFF2D3540),
+                                                                                              fontWeight: FontWeight.w500,
+                                                                                              fontSize: 14.0,
+                                                                                            ),
+                                                                                          ),
+                                                                                        ],
+                                                                                      ),
+                                                                                    ),
+                                                                                    SizedBox(
+                                                                                      height: 14.0,
+                                                                                    ),
+                                                                                    GestureDetector(
+                                                                                      onTap: () {
+                                                                                        setState(() {
+                                                                                          selected = "Kargo süreci ile ilgili sorun yaşıyorum";
+                                                                                        });
+                                                                                      },
+                                                                                      child: Row(
+                                                                                        children: [
+                                                                                          Container(
+                                                                                            decoration: BoxDecoration(
+                                                                                              shape: BoxShape.circle,
+                                                                                              color: Color(0xFFE2E2E2),
+                                                                                            ),
+                                                                                            child: Padding(
+                                                                                              padding: const EdgeInsets.all(5.0),
+                                                                                              child: Container(
+                                                                                                height: 11.0,
+                                                                                                width: 11.0,
+                                                                                                decoration: BoxDecoration(
+                                                                                                  shape: BoxShape.circle,
+                                                                                                  color: selected == "Kargo süreci ile ilgili sorun yaşıyorum" ? kButtonBlue : Color(0xFFE2E2E2),
+                                                                                                ),
+                                                                                              ),
+                                                                                            ),
+                                                                                          ),
+                                                                                          SizedBox(
+                                                                                            width: 8.0,
+                                                                                          ),
+                                                                                          Text(
+                                                                                            "Kargo süreci ile ilgili sorun yaşıyorum",
+                                                                                            style: TextStyle(
+                                                                                              color: Color(0xFF2D3540),
+                                                                                              fontWeight: FontWeight.w500,
+                                                                                              fontSize: 14.0,
+                                                                                            ),
+                                                                                          ),
+                                                                                        ],
+                                                                                      ),
+                                                                                    ),
+                                                                                    SizedBox(
+                                                                                      height: 14.0,
+                                                                                    ),
+                                                                                    GestureDetector(
+                                                                                      onTap: () {
+                                                                                        setState(() {
+                                                                                          selected = "Elime ulaşan ürün kırık/hatalı/yanlış";
+                                                                                        });
+                                                                                      },
+                                                                                      child: Row(
+                                                                                        children: [
+                                                                                          Container(
+                                                                                            decoration: BoxDecoration(
+                                                                                              shape: BoxShape.circle,
+                                                                                              color: Color(0xFFE2E2E2),
+                                                                                            ),
+                                                                                            child: Padding(
+                                                                                              padding: const EdgeInsets.all(5.0),
+                                                                                              child: Container(
+                                                                                                height: 11.0,
+                                                                                                width: 11.0,
+                                                                                                decoration: BoxDecoration(
+                                                                                                  shape: BoxShape.circle,
+                                                                                                  color: selected == "Elime ulaşan ürün kırık/hatalı/yanlış" ? kButtonBlue : Color(0xFFE2E2E2),
+                                                                                                ),
+                                                                                              ),
+                                                                                            ),
+                                                                                          ),
+                                                                                          SizedBox(
+                                                                                            width: 8.0,
+                                                                                          ),
+                                                                                          Text(
+                                                                                            "Elime ulaşan ürün kırık/hatalı/yanlış",
+                                                                                            style: TextStyle(
+                                                                                              color: Color(0xFF2D3540),
+                                                                                              fontWeight: FontWeight.w500,
+                                                                                              fontSize: 14.0,
+                                                                                            ),
+                                                                                          ),
+                                                                                        ],
+                                                                                      ),
+                                                                                    ),
+                                                                                    SizedBox(
+                                                                                      height: 14.0,
+                                                                                    ),
+                                                                                    GestureDetector(
+                                                                                      onTap: () {
+                                                                                        setState(() {
+                                                                                          selected = "İade talebinde bulunmak istiyorum";
+                                                                                        });
+                                                                                      },
+                                                                                      child: Row(
+                                                                                        children: [
+                                                                                          Container(
+                                                                                            decoration: BoxDecoration(
+                                                                                              shape: BoxShape.circle,
+                                                                                              color: Color(0xFFE2E2E2),
+                                                                                            ),
+                                                                                            child: Padding(
+                                                                                              padding: const EdgeInsets.all(5.0),
+                                                                                              child: Container(
+                                                                                                height: 11.0,
+                                                                                                width: 11.0,
+                                                                                                decoration: BoxDecoration(
+                                                                                                  shape: BoxShape.circle,
+                                                                                                  color: selected == "İade talebinde bulunmak istiyorum" ? kButtonBlue : Color(0xFFE2E2E2),
+                                                                                                ),
+                                                                                              ),
+                                                                                            ),
+                                                                                          ),
+                                                                                          SizedBox(
+                                                                                            width: 8.0,
+                                                                                          ),
+                                                                                          Text(
+                                                                                            "İade talebinde bulunmak istiyorum",
+                                                                                            style: TextStyle(
+                                                                                              color: Color(0xFF2D3540),
+                                                                                              fontWeight: FontWeight.w500,
+                                                                                              fontSize: 14.0,
+                                                                                            ),
+                                                                                          ),
+                                                                                        ],
+                                                                                      ),
+                                                                                    ),
+                                                                                    SizedBox(
+                                                                                      height: 14.0,
+                                                                                    ),
+                                                                                    GestureDetector(
+                                                                                      onTap: () {
+                                                                                        setState(() {
+                                                                                          selected = "Diğer";
+                                                                                        });
+                                                                                      },
+                                                                                      child: Row(
+                                                                                        children: [
+                                                                                          Container(
+                                                                                            decoration: BoxDecoration(
+                                                                                              shape: BoxShape.circle,
+                                                                                              color: Color(0xFFE2E2E2),
+                                                                                            ),
+                                                                                            child: Padding(
+                                                                                              padding: const EdgeInsets.all(5.0),
+                                                                                              child: Container(
+                                                                                                height: 11.0,
+                                                                                                width: 11.0,
+                                                                                                decoration: BoxDecoration(
+                                                                                                  shape: BoxShape.circle,
+                                                                                                  color: selected == "Diğer" ? kButtonBlue : Color(0xFFE2E2E2),
+                                                                                                ),
+                                                                                              ),
+                                                                                            ),
+                                                                                          ),
+                                                                                          SizedBox(
+                                                                                            width: 8.0,
+                                                                                          ),
+                                                                                          Text(
+                                                                                            "Diğer",
+                                                                                            style: TextStyle(
+                                                                                              color: Color(0xFF2D3540),
+                                                                                              fontWeight: FontWeight.w500,
+                                                                                              fontSize: 14.0,
+                                                                                            ),
+                                                                                          ),
+                                                                                        ],
+                                                                                      ),
+                                                                                    ),
+                                                                                    SizedBox(
+                                                                                      height: 16.0,
+                                                                                    ),
+                                                                                  ],
+                                                                                )
+                                                                              : Column(
+                                                                                  children: [
+                                                                                    GestureDetector(
+                                                                                      onTap: () {
+                                                                                        setState(() {
+                                                                                          selected = "İlan detaylarında değişiklik yapmak istiyorum";
+                                                                                        });
+                                                                                      },
+                                                                                      child: Row(
+                                                                                        children: [
+                                                                                          Container(
+                                                                                            decoration: BoxDecoration(
+                                                                                              shape: BoxShape.circle,
+                                                                                              color: Color(0xFFE2E2E2),
+                                                                                            ),
+                                                                                            child: Padding(
+                                                                                              padding: const EdgeInsets.all(5.0),
+                                                                                              child: Container(
+                                                                                                height: 11.0,
+                                                                                                width: 11.0,
+                                                                                                decoration: BoxDecoration(
+                                                                                                  shape: BoxShape.circle,
+                                                                                                  color: selected == "İlan detaylarında değişiklik yapmak istiyorum" ? kButtonBlue : Color(0xFFE2E2E2),
+                                                                                                ),
+                                                                                              ),
+                                                                                            ),
+                                                                                          ),
+                                                                                          SizedBox(
+                                                                                            width: 8.0,
+                                                                                          ),
+                                                                                          Text(
+                                                                                            "İlan detaylarında değişiklik yapmak\nistiyorum",
+                                                                                            style: TextStyle(
+                                                                                              color: Color(0xFF2D3540),
+                                                                                              fontWeight: FontWeight.w500,
+                                                                                              fontSize: 14.0,
+                                                                                            ),
+                                                                                          ),
+                                                                                        ],
+                                                                                      ),
+                                                                                    ),
+                                                                                    SizedBox(
+                                                                                      height: 14.0,
+                                                                                    ),
+                                                                                    GestureDetector(
+                                                                                      onTap: () {
+                                                                                        setState(() {
+                                                                                          selected = "Kargo süreci ile ilgili sorun yaşıyorum";
+                                                                                        });
+                                                                                      },
+                                                                                      child: Row(
+                                                                                        children: [
+                                                                                          Container(
+                                                                                            decoration: BoxDecoration(
+                                                                                              shape: BoxShape.circle,
+                                                                                              color: Color(0xFFE2E2E2),
+                                                                                            ),
+                                                                                            child: Padding(
+                                                                                              padding: const EdgeInsets.all(5.0),
+                                                                                              child: Container(
+                                                                                                height: 11.0,
+                                                                                                width: 11.0,
+                                                                                                decoration: BoxDecoration(
+                                                                                                  shape: BoxShape.circle,
+                                                                                                  color: selected == "Kargo süreci ile ilgili sorun yaşıyorum" ? kButtonBlue : Color(0xFFE2E2E2),
+                                                                                                ),
+                                                                                              ),
+                                                                                            ),
+                                                                                          ),
+                                                                                          SizedBox(
+                                                                                            width: 8.0,
+                                                                                          ),
+                                                                                          Text(
+                                                                                            "Kargo süreci ile ilgili sorun yaşıyorum",
+                                                                                            style: TextStyle(
+                                                                                              color: Color(0xFF2D3540),
+                                                                                              fontWeight: FontWeight.w500,
+                                                                                              fontSize: 14.0,
+                                                                                            ),
+                                                                                          ),
+                                                                                        ],
+                                                                                      ),
+                                                                                    ),
+                                                                                    SizedBox(
+                                                                                      height: 14.0,
+                                                                                    ),
+                                                                                    GestureDetector(
+                                                                                      onTap: () {
+                                                                                        setState(() {
+                                                                                          selected = "İadesi gerçekleşen ürün kırık/hatalı/yanlış";
+                                                                                        });
+                                                                                      },
+                                                                                      child: Row(
+                                                                                        children: [
+                                                                                          Container(
+                                                                                            decoration: BoxDecoration(
+                                                                                              shape: BoxShape.circle,
+                                                                                              color: Color(0xFFE2E2E2),
+                                                                                            ),
+                                                                                            child: Padding(
+                                                                                              padding: const EdgeInsets.all(5.0),
+                                                                                              child: Container(
+                                                                                                height: 11.0,
+                                                                                                width: 11.0,
+                                                                                                decoration: BoxDecoration(
+                                                                                                  shape: BoxShape.circle,
+                                                                                                  color: selected == "İadesi gerçekleşen ürün kırık/hatalı/yanlış" ? kButtonBlue : Color(0xFFE2E2E2),
+                                                                                                ),
+                                                                                              ),
+                                                                                            ),
+                                                                                          ),
+                                                                                          SizedBox(
+                                                                                            width: 8.0,
+                                                                                          ),
+                                                                                          Text(
+                                                                                            "İadesi gerçekleşen ürün kırık/hatalı/yanlış",
+                                                                                            style: TextStyle(
+                                                                                              color: Color(0xFF2D3540),
+                                                                                              fontWeight: FontWeight.w500,
+                                                                                              fontSize: 14.0,
+                                                                                            ),
+                                                                                          ),
+                                                                                        ],
+                                                                                      ),
+                                                                                    ),
+                                                                                    SizedBox(
+                                                                                      height: 14.0,
+                                                                                    ),
+                                                                                    GestureDetector(
+                                                                                      onTap: () {
+                                                                                        setState(() {
+                                                                                          selected = "Diğer";
+                                                                                        });
+                                                                                      },
+                                                                                      child: Row(
+                                                                                        children: [
+                                                                                          Container(
+                                                                                            decoration: BoxDecoration(
+                                                                                              shape: BoxShape.circle,
+                                                                                              color: Color(0xFFE2E2E2),
+                                                                                            ),
+                                                                                            child: Padding(
+                                                                                              padding: const EdgeInsets.all(5.0),
+                                                                                              child: Container(
+                                                                                                height: 11.0,
+                                                                                                width: 11.0,
+                                                                                                decoration: BoxDecoration(
+                                                                                                  shape: BoxShape.circle,
+                                                                                                  color: selected == "Diğer" ? kButtonBlue : Color(0xFFE2E2E2),
+                                                                                                ),
+                                                                                              ),
+                                                                                            ),
+                                                                                          ),
+                                                                                          SizedBox(
+                                                                                            width: 8.0,
+                                                                                          ),
+                                                                                          Text(
+                                                                                            "Diğer",
+                                                                                            style: TextStyle(
+                                                                                              color: Color(0xFF2D3540),
+                                                                                              fontWeight: FontWeight.w500,
+                                                                                              fontSize: 14.0,
+                                                                                            ),
+                                                                                          ),
+                                                                                        ],
+                                                                                      ),
+                                                                                    ),
+                                                                                    SizedBox(
+                                                                                      height: 16.0,
+                                                                                    ),
+                                                                                  ],
+                                                                                ),
+                                                                          Padding(
+                                                                            padding:
+                                                                                EdgeInsets.only(
+                                                                              bottom: MediaQuery.of(context).viewInsets.bottom,
+                                                                            ),
+                                                                            child:
+                                                                                TextField(
+                                                                              controller: _problemController,
+                                                                              decoration: InputDecoration(
+                                                                                hintText: "Yorumunuz",
+                                                                                border: OutlineInputBorder(
+                                                                                  borderRadius: BorderRadius.circular(10.0),
+                                                                                  borderSide: BorderSide(
+                                                                                    color: Color(0xFF8C95A1),
+                                                                                    width: 0.5,
+                                                                                  ),
+                                                                                ),
+                                                                                focusedBorder: OutlineInputBorder(
+                                                                                  borderRadius: BorderRadius.circular(10.0),
+                                                                                  borderSide: BorderSide(
+                                                                                    color: Color(0xFF8C95A1),
+                                                                                    width: 0.5,
+                                                                                  ),
+                                                                                ),
+                                                                                enabledBorder: OutlineInputBorder(
+                                                                                  borderRadius: BorderRadius.circular(10.0),
+                                                                                  borderSide: BorderSide(
+                                                                                    color: Color(0xFF8C95A1),
+                                                                                    width: 0.5,
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                              maxLines: 3,
+                                                                            ),
+                                                                          ),
+                                                                          SizedBox(
+                                                                            height:
+                                                                                2.0,
+                                                                          ),
+                                                                          Row(
+                                                                            mainAxisAlignment:
+                                                                                MainAxisAlignment.spaceEvenly,
+                                                                            children: [
+                                                                              ElevatedButton(
+                                                                                onPressed: () {
+                                                                                  Navigator.pop(context);
+                                                                                },
+                                                                                style: ButtonStyle(
+                                                                                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                                                                    RoundedRectangleBorder(
+                                                                                      side: BorderSide(
+                                                                                        color: kButtonBlue,
+                                                                                        width: 1.5,
+                                                                                      ),
+                                                                                      borderRadius: BorderRadius.circular(32.0),
+                                                                                    ),
+                                                                                  ),
+                                                                                  minimumSize: MaterialStateProperty.all(Size(140, 40)),
+                                                                                  backgroundColor: MaterialStateProperty.all(
+                                                                                    Colors.white,
+                                                                                  ),
+                                                                                  elevation: MaterialStateProperty.all(0),
+                                                                                ),
+                                                                                child: Text(
+                                                                                  "VAZGEÇ",
+                                                                                  style: TextStyle(
+                                                                                    fontSize: 15.0,
+                                                                                    fontWeight: FontWeight.bold,
+                                                                                    color: kButtonBlue,
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                              ElevatedButton(
+                                                                                onPressed: selected != null && _problemController.text.isNotEmpty
+                                                                                    ? () async {
+                                                                                        WriteBatch _writeBatch = _firestore.batch();
+                                                                                        _writeBatch.update(roomSnapshot.data!.reference, {
+                                                                                          "problem": selected,
+                                                                                          "problemDetail": _problemController.text,
+                                                                                          "problemDate": FieldValue.serverTimestamp(),
+                                                                                          "problemState": "Çözüm Merkezine İletildi.",
+                                                                                          "isReported": true,
+                                                                                        });
+                                                                                        _writeBatch.set(roomSnapshot.data!.reference.collection("ProblemMessages").doc(), {
+                                                                                          "message": _problemController.text,
+                                                                                          "date": FieldValue.serverTimestamp(),
+                                                                                          "sender": _firebaseAuth.currentUser!.uid,
+                                                                                        });
+                                                                                        await _writeBatch.commit().whenComplete(() {
+                                                                                          Navigator.pop(context);
+                                                                                          showDialog(
+                                                                                              context: context,
+                                                                                              builder: (context) {
+                                                                                                return AlertDialog(
+                                                                                                  shape: RoundedRectangleBorder(
+                                                                                                    borderRadius: BorderRadius.circular(10.0),
+                                                                                                    side: BorderSide(
+                                                                                                      color: Color(0xFFABCDF1),
+                                                                                                    ),
+                                                                                                  ),
+                                                                                                  backgroundColor: Color(0xFFE5EFFA),
+                                                                                                  content: Column(
+                                                                                                    mainAxisSize: MainAxisSize.min,
+                                                                                                    children: [
+                                                                                                      Row(
+                                                                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                                                                        children: [
+                                                                                                          Container(
+                                                                                                            decoration: BoxDecoration(
+                                                                                                              color: kButtonBlue,
+                                                                                                              borderRadius: BorderRadius.circular(6.0),
+                                                                                                            ),
+                                                                                                            child: Padding(
+                                                                                                              padding: const EdgeInsets.all(8.0),
+                                                                                                              child: Icon(
+                                                                                                                FontAwesomeIcons.infoCircle,
+                                                                                                                color: Colors.white,
+                                                                                                                size: 20.0,
+                                                                                                              ),
+                                                                                                            ),
+                                                                                                          ),
+                                                                                                          SizedBox(
+                                                                                                            width: 12.0,
+                                                                                                          ),
+                                                                                                          Text(
+                                                                                                            "Talebiniz iletildi!",
+                                                                                                            textAlign: TextAlign.center,
+                                                                                                            style: TextStyle(
+                                                                                                              fontSize: 18.0,
+                                                                                                              height: 1.2,
+                                                                                                              fontWeight: FontWeight.bold,
+                                                                                                              color: kDarkBlue,
+                                                                                                            ),
+                                                                                                          ),
+                                                                                                        ],
+                                                                                                      ),
+                                                                                                      SizedBox(
+                                                                                                        height: 12.0,
+                                                                                                      ),
+                                                                                                      Text(
+                                                                                                        "Talebinizin sürecini Çözüm Merkezi kısmından takip edebilir, çözüm merkeziyle iletişime geçebilirsiniz.",
+                                                                                                        textAlign: TextAlign.center,
+                                                                                                        style: TextStyle(
+                                                                                                          fontSize: 12.0,
+                                                                                                          fontWeight: FontWeight.w500,
+                                                                                                          color: kDarkBlue,
+                                                                                                        ),
+                                                                                                      ),
+                                                                                                    ],
+                                                                                                  ),
+                                                                                                );
+                                                                                              });
+                                                                                        });
+                                                                                      }
+                                                                                    : () {
+                                                                                        showDialog(
+                                                                                            context: context,
+                                                                                            builder: (context) {
+                                                                                              return Center(
+                                                                                                child: Wrap(
+                                                                                                  children: [
+                                                                                                    Stack(
+                                                                                                      children: [
+                                                                                                        AlertDialog(
+                                                                                                          shape: RoundedRectangleBorder(
+                                                                                                            borderRadius: BorderRadius.circular(15),
+                                                                                                          ),
+                                                                                                          backgroundColor: Color(0xFF6EB0FC),
+                                                                                                          content: Center(
+                                                                                                            child: Column(
+                                                                                                              children: [
+                                                                                                                Align(
+                                                                                                                  alignment: Alignment.topRight,
+                                                                                                                  child: GestureDetector(
+                                                                                                                    onTap: () {
+                                                                                                                      Navigator.pop(context);
+                                                                                                                    },
+                                                                                                                    child: Icon(
+                                                                                                                      FontAwesomeIcons.times,
+                                                                                                                      color: Colors.white,
+                                                                                                                    ),
+                                                                                                                  ),
+                                                                                                                ),
+                                                                                                                SizedBox(
+                                                                                                                  height: 48.0,
+                                                                                                                ),
+                                                                                                                Text(
+                                                                                                                  "Sorun bildirebilmeniz için yorum kısmını doldurmanız gereklidir.",
+                                                                                                                  style: TextStyle(
+                                                                                                                    color: Colors.white,
+                                                                                                                  ),
+                                                                                                                  textAlign: TextAlign.center,
+                                                                                                                ),
+                                                                                                              ],
+                                                                                                            ),
+                                                                                                          ),
+                                                                                                        ),
+                                                                                                        Align(
+                                                                                                          alignment: Alignment.topCenter,
+                                                                                                          child: Image.asset(
+                                                                                                            "assets/images/warningDialogDraw.png",
+                                                                                                            height: 96.0,
+                                                                                                          ),
+                                                                                                        ),
+                                                                                                      ],
+                                                                                                    ),
+                                                                                                  ],
+                                                                                                ),
+                                                                                              );
+                                                                                            });
+                                                                                      },
+                                                                                style: ButtonStyle(
+                                                                                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                                                                    RoundedRectangleBorder(
+                                                                                      borderRadius: BorderRadius.circular(32.0),
+                                                                                    ),
+                                                                                  ),
+                                                                                  shadowColor: MaterialStateProperty.all(
+                                                                                    kButtonBlue.withOpacity(0.4),
+                                                                                  ),
+                                                                                  minimumSize: MaterialStateProperty.all(Size(140, 40)),
+                                                                                  backgroundColor: MaterialStateProperty.all(
+                                                                                    kButtonBlue,
+                                                                                  ),
+                                                                                  elevation: MaterialStateProperty.all(20),
+                                                                                ),
+                                                                                child: Text(
+                                                                                  "GÖNDER",
+                                                                                  style: TextStyle(
+                                                                                    fontSize: 15.0,
+                                                                                    fontWeight: FontWeight.bold,
+                                                                                    color: Colors.white,
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                          SizedBox(
+                                                                            height:
+                                                                                2.0,
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              );
+                                                            });
+                                                          });
+                                                    },
+                                          child: Container(
+                                            alignment: Alignment.center,
+                                            width: 220,
+                                            height: 45,
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Transform.rotate(
+                                                  angle: 3.15,
+                                                  child: Icon(
+                                                    Icons.info,
+                                                    color: Color(0xFFFE9ECC),
+                                                    size: 20.0,
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: 16.0,
+                                                ),
+                                                Text(
+                                                  "Sorun Bildir",
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                    color: Color(0xFFFE9ECC),
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 13,
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: 16.0,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 8.0,
+                                        ),
                                       ],
+                                    )
+                                  : Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 32.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Icon(
+                                                FontAwesomeIcons.tag,
+                                                size: 12.0,
+                                                color: Color(0xFF6EB0FC),
+                                              ),
+                                              SizedBox(
+                                                width: 6.0,
+                                              ),
+                                              Container(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width -
+                                                    88.0,
+                                                child: Text(
+                                                  roomSnapshot.data!
+                                                      .data()!["productName"],
+                                                  style: TextStyle(
+                                                    color: kDarkBlue,
+                                                    fontWeight: FontWeight.w700,
+                                                    fontSize: 15,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: 12.0,
+                                          ),
+                                          Row(
+                                            children: [
+                                              Icon(
+                                                FontAwesomeIcons.bookmark,
+                                                size: 12.0,
+                                                color: Color(0xFF6EB0FC),
+                                              ),
+                                              SizedBox(
+                                                width: 6.0,
+                                              ),
+                                              Text(
+                                                roomSnapshot.data!.data()![
+                                                    "selectedProductType"],
+                                                style: TextStyle(
+                                                  fontSize: 13.7,
+                                                  color: Color(0xFFC3C3C3),
+                                                  fontWeight: FontWeight.w700,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: 16.0,
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Container(
+                                                height: 230,
+                                                width: 215,
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8.0),
+                                                    image: DecorationImage(
+                                                      image: NetworkImage(
+                                                          roomSnapshot.data!
+                                                                  .data()![
+                                                              "imageURLs"][0]),
+                                                      fit: BoxFit.cover,
+                                                    )),
+                                              ),
+                                              SizedBox(
+                                                width: 10.0,
+                                              ),
+                                              Column(
+                                                children: [
+                                                  if (roomSnapshot.data!
+                                                          .data()!["imageURLs"]
+                                                          .length >=
+                                                      2)
+                                                    Container(
+                                                      height: 70.0,
+                                                      width: 70.0,
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      8.0),
+                                                          image:
+                                                              DecorationImage(
+                                                            image: NetworkImage(
+                                                                roomSnapshot
+                                                                        .data!
+                                                                        .data()![
+                                                                    "imageURLs"][1]),
+                                                            fit: BoxFit.cover,
+                                                          )),
+                                                    ),
+                                                  if (roomSnapshot.data!
+                                                          .data()!["imageURLs"]
+                                                          .length >=
+                                                      3)
+                                                    SizedBox(
+                                                      height: 8.0,
+                                                    ),
+                                                  if (roomSnapshot.data!
+                                                          .data()!["imageURLs"]
+                                                          .length >=
+                                                      3)
+                                                    Container(
+                                                      height: 70.0,
+                                                      width: 70.0,
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      8.0),
+                                                          image:
+                                                              DecorationImage(
+                                                            image: NetworkImage(
+                                                                roomSnapshot
+                                                                        .data!
+                                                                        .data()![
+                                                                    "imageURLs"][2]),
+                                                            fit: BoxFit.cover,
+                                                          )),
+                                                    ),
+                                                  if (roomSnapshot.data!
+                                                          .data()!["imageURLs"]
+                                                          .length ==
+                                                      4)
+                                                    SizedBox(
+                                                      height: 8.0,
+                                                    ),
+                                                  if (roomSnapshot.data!
+                                                          .data()!["imageURLs"]
+                                                          .length ==
+                                                      4)
+                                                    Container(
+                                                      height: 70.0,
+                                                      width: 70.0,
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      8.0),
+                                                          image:
+                                                              DecorationImage(
+                                                            image: NetworkImage(
+                                                                roomSnapshot
+                                                                        .data!
+                                                                        .data()![
+                                                                    "imageURLs"][3]),
+                                                            fit: BoxFit.cover,
+                                                          )),
+                                                    ),
+                                                ],
+                                              )
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: 8.0,
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 12.0),
+                                            child: Container(
+                                              height: 1,
+                                              color: Color(0xFFC9C6C6),
+                                            ),
+                                          ),
+                                          ProductInfoRow(
+                                              title: "Anlaşılan Ücret",
+                                              info: roomSnapshot.data!
+                                                      .data()!["productPrice"] +
+                                                  " TL",
+                                              icon:
+                                                  "assets/images/productPriceIcon.png"),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 12.0),
+                                            child: Container(
+                                              height: 1,
+                                              color: Color(0xFFC9C6C6),
+                                            ),
+                                          ),
+                                          ProductInfoRow(
+                                              title: isSeller
+                                                  ? "Alıcının İsmi"
+                                                  : "Satıcının İsmi",
+                                              info: roomSnapshot.data!
+                                                  .data()!["buyerName"],
+                                              icon:
+                                                  "assets/images/buyerNameIcon.png"),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 12.0),
+                                            child: Container(
+                                              height: 1,
+                                              color: Color(0xFFC9C6C6),
+                                            ),
+                                          ),
+                                          ProductInfoRow(
+                                              title: "Kargo Firması",
+                                              info: roomSnapshot.data!
+                                                  .data()!["selectedCargo"],
+                                              icon:
+                                                  "assets/images/selectedCargoIcon.png"),
+                                          if (roomSnapshot.data!
+                                              .data()!
+                                              .containsKey("cargoTrackingCode"))
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 12.0),
+                                              child: Container(
+                                                height: 1,
+                                                color: Color(0xFFC9C6C6),
+                                              ),
+                                            ),
+                                          if (roomSnapshot.data!
+                                              .data()!
+                                              .containsKey("cargoTrackingCode"))
+                                            ProductInfoRow(
+                                                title: "Kargo Takip",
+                                                info:
+                                                    roomSnapshot.data!.data()![
+                                                        "cargoTrackingCode"],
+                                                icon:
+                                                    "assets/images/selectedCargoIcon.png"),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 12.0),
+                                            child: Container(
+                                              height: 1,
+                                              color: Color(0xFFC9C6C6),
+                                            ),
+                                          ),
+                                          ProductInfoRow(
+                                              title:
+                                                  "Anlaşılan Kargolama Tarihi",
+                                              info: (roomSnapshot.data!
+                                                              .data()![
+                                                                  "cargoDate"]
+                                                              .toDate()
+                                                              .day <
+                                                          10
+                                                      ? "0"
+                                                      : "") +
+                                                  roomSnapshot.data!
+                                                      .data()!["cargoDate"]
+                                                      .toDate()
+                                                      .day
+                                                      .toString() +
+                                                  "/" +
+                                                  (roomSnapshot.data!
+                                                              .data()![
+                                                                  "cargoDate"]
+                                                              .toDate()
+                                                              .month <
+                                                          10
+                                                      ? "0"
+                                                      : "") +
+                                                  roomSnapshot.data!
+                                                      .data()!["cargoDate"]
+                                                      .toDate()
+                                                      .month
+                                                      .toString() +
+                                                  "/" +
+                                                  roomSnapshot.data!
+                                                      .data()!["cargoDate"]
+                                                      .toDate()
+                                                      .year
+                                                      .toString(),
+                                              icon:
+                                                  "assets/images/cargoDateIcon.png"),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 12.0),
+                                            child: Container(
+                                              height: 1,
+                                              color: Color(0xFFC9C6C6),
+                                            ),
+                                          ),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  Image.asset(
+                                                    "assets/images/productDescriptionIcon.png",
+                                                    height: 13.0,
+                                                    width: 20.0,
+                                                  ),
+                                                  SizedBox(
+                                                    width: 6.0,
+                                                  ),
+                                                  Text(
+                                                    "Ürün Açıklaması & Detaylar",
+                                                    style: TextStyle(
+                                                      color: kDarkBlue,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 13.0,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              SizedBox(
+                                                height: 8.0,
+                                              ),
+                                              Container(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width -
+                                                    32,
+                                                decoration: BoxDecoration(
+                                                    color: Color(0xFFFEFDFD),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10.0),
+                                                    border: Border.all(
+                                                      color: Color(0xFF707070)
+                                                          .withOpacity(0.1),
+                                                    )),
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: Text(
+                                                    roomSnapshot.data!.data()![
+                                                        "productDescription"],
+                                                    style: TextStyle(
+                                                      color: kTextFieldGrey,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontSize: 13.0,
+                                                    ),
+                                                    textAlign: TextAlign.start,
+                                                    maxLines: 1,
+                                                    softWrap: false,
+                                                    overflow: TextOverflow.clip,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: 32.0,
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                ),
+                              SizedBox(
+                                height: 8.0,
                               ),
                             ],
                           ),
                         ),
                       ],
                     ),
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(14.0),
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            blurRadius: 4.0,
-                            color: Colors.black.withOpacity(0.3),
-                          )
-                        ]),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                setState(() {
-                                  bottomIndex = 0;
-                                });
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.only(top: 18.0),
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      "Alışveriş Süreci",
-                                      style: TextStyle(
-                                        fontSize: 13.0,
-                                        fontWeight: FontWeight.w700,
-                                        color: bottomIndex == 0
-                                            ? kDarkBlue
-                                            : Color(0xFFB7B1B1),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 8.0,
-                                    ),
-                                    bottomIndex == 0
-                                        ? Container(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width /
-                                                2,
-                                            height: 3.0,
-                                            color: kButtonBlue,
-                                          )
-                                        : Container(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width /
-                                                2,
-                                            height: 0.2,
-                                            decoration:
-                                                BoxDecoration(boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.black,
-                                                blurRadius: 0.5,
-                                              ),
-                                            ]),
-                                          ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                setState(() {
-                                  bottomIndex = 1;
-                                });
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.only(top: 18.0),
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      "Ürün Bilgisi",
-                                      style: TextStyle(
-                                        fontSize: 13.0,
-                                        fontWeight: FontWeight.w700,
-                                        color: bottomIndex == 1
-                                            ? kDarkBlue
-                                            : Color(0xFFB7B1B1),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 8.0,
-                                    ),
-                                    bottomIndex == 1
-                                        ? Container(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width /
-                                                2,
-                                            height: 3.0,
-                                            color: kButtonBlue,
-                                          )
-                                        : Container(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width /
-                                                2,
-                                            height: 0.2,
-                                            decoration:
-                                                BoxDecoration(boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.black,
-                                                blurRadius: 0.5,
-                                              ),
-                                            ]),
-                                          ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 12.0,
-                        ),
-                        bottomIndex == 0
-                            ? Column(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 12.0, left: 32.0, right: 32.0),
-                                    child: Row(
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              bottom: 3.0),
-                                          child: Icon(
-                                            FontAwesomeIcons.solidCheckCircle,
-                                            color: Color(0xFF139874),
-                                          ),
-                                        ),
-                                        Expanded(
-                                          child: Container(
-                                            height: 3.0,
-                                            color: roomSnapshot.data!
-                                                        .data()!["state"] ==
-                                                    "Alıcı bekleniyor"
-                                                ? gray
-                                                : (roomSnapshot.data!
-                                                            .data()!["state"] ==
-                                                        "Ödeme bekleniyor"
-                                                    ? orange
-                                                    : green),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              bottom: 3.0),
-                                          child: Icon(
-                                            FontAwesomeIcons.solidCheckCircle,
-                                            color: roomSnapshot.data!
-                                                        .data()!["state"] ==
-                                                    "Alıcı bekleniyor"
-                                                ? gray
-                                                : (roomSnapshot.data!
-                                                            .data()!["state"] ==
-                                                        "Ödeme bekleniyor"
-                                                    ? orange
-                                                    : green),
-                                          ),
-                                        ),
-                                        Expanded(
-                                          child: Container(
-                                            height: 3.0,
-                                            color: (roomSnapshot.data!
-                                                            .data()!["state"] ==
-                                                        "Ödeme bekleniyor" ||
-                                                    roomSnapshot.data!
-                                                            .data()!["state"] ==
-                                                        "Alıcı bekleniyor")
-                                                ? gray
-                                                : green,
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              bottom: 3.0),
-                                          child: Icon(
-                                            FontAwesomeIcons.solidCheckCircle,
-                                            color: (roomSnapshot.data!
-                                                            .data()!["state"] ==
-                                                        "Ödeme bekleniyor" ||
-                                                    roomSnapshot.data!
-                                                            .data()!["state"] ==
-                                                        "Alıcı bekleniyor")
-                                                ? gray
-                                                : green,
-                                          ),
-                                        ),
-                                        Expanded(
-                                          child: Container(
-                                            height: 3.0,
-                                            color: (roomSnapshot.data!
-                                                            .data()!["state"] ==
-                                                        "Ödeme bekleniyor" ||
-                                                    roomSnapshot.data!
-                                                            .data()!["state"] ==
-                                                        "Alıcı bekleniyor")
-                                                ? gray
-                                                : (roomSnapshot.data!
-                                                            .data()!["state"] ==
-                                                        "Kargo bekleniyor"
-                                                    ? orange
-                                                    : green),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              bottom: 3.0),
-                                          child: Icon(
-                                            FontAwesomeIcons.solidCheckCircle,
-                                            color: (roomSnapshot.data!
-                                                            .data()!["state"] ==
-                                                        "Ödeme bekleniyor" ||
-                                                    roomSnapshot.data!
-                                                            .data()!["state"] ==
-                                                        "Alıcı bekleniyor")
-                                                ? gray
-                                                : (roomSnapshot.data!
-                                                            .data()!["state"] ==
-                                                        "Kargo bekleniyor"
-                                                    ? orange
-                                                    : green),
-                                          ),
-                                        ),
-                                        Expanded(
-                                          child: Container(
-                                            height: 3.0,
-                                            color: roomSnapshot.data!
-                                                        .data()!["state"] ==
-                                                    "Onay bekleniyor"
-                                                ? orange
-                                                : (roomSnapshot.data!
-                                                            .data()!["state"] ==
-                                                        "Tamamlandı"
-                                                    ? green
-                                                    : gray),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              bottom: 3.0),
-                                          child: Icon(
-                                            FontAwesomeIcons.solidCheckCircle,
-                                            color: roomSnapshot.data!
-                                                        .data()!["state"] ==
-                                                    "Onay bekleniyor"
-                                                ? orange
-                                                : (roomSnapshot.data!
-                                                            .data()!["state"] ==
-                                                        "Tamamlandı"
-                                                    ? green
-                                                    : gray),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 6.0,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 18.0, right: 20.0),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          "Alıcı ve Satıcı\nBuluştu.",
-                                          style: TextStyle(
-                                            fontSize: 8,
-                                            fontWeight: FontWeight.w500,
-                                            color: Color(0xFF139874),
-                                          ),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                        Text(
-                                          "Alıcı Ödemesi\nBekleniyor.",
-                                          style: TextStyle(
-                                            fontSize: 8,
-                                            fontWeight: FontWeight.w500,
-                                            color: roomSnapshot.data!
-                                                        .data()!["state"] ==
-                                                    "Alıcı bekleniyor"
-                                                ? gray
-                                                : (roomSnapshot.data!
-                                                            .data()!["state"] ==
-                                                        "Ödeme bekleniyor"
-                                                    ? orange
-                                                    : green),
-                                          ),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                        Text(
-                                          "Alıcı Ödemesi\nAlındı!",
-                                          style: TextStyle(
-                                            fontSize: 8,
-                                            fontWeight: FontWeight.w500,
-                                            color: (roomSnapshot.data!
-                                                            .data()!["state"] ==
-                                                        "Ödeme bekleniyor" ||
-                                                    roomSnapshot.data!
-                                                            .data()!["state"] ==
-                                                        "Alıcı bekleniyor")
-                                                ? gray
-                                                : green,
-                                          ),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                        Text(
-                                          "Kargo\nAşamasında!",
-                                          style: TextStyle(
-                                            fontSize: 8,
-                                            fontWeight: FontWeight.w500,
-                                            color: (roomSnapshot.data!
-                                                            .data()!["state"] ==
-                                                        "Ödeme bekleniyor" ||
-                                                    roomSnapshot.data!
-                                                            .data()!["state"] ==
-                                                        "Alıcı bekleniyor")
-                                                ? gray
-                                                : (roomSnapshot.data!
-                                                            .data()!["state"] ==
-                                                        "Kargo bekleniyor"
-                                                    ? orange
-                                                    : green),
-                                          ),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                        Text(
-                                          "Alışveriş\nTamamlandı!",
-                                          style: TextStyle(
-                                            fontSize: 8,
-                                            fontWeight: FontWeight.w500,
-                                            color: roomSnapshot.data!
-                                                        .data()!["state"] ==
-                                                    "Onay bekleniyor"
-                                                ? orange
-                                                : (roomSnapshot.data!
-                                                            .data()!["state"] ==
-                                                        "Tamamlandı"
-                                                    ? green
-                                                    : gray),
-                                          ),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 12.0,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Image.asset(
-                                        "assets/images/roomPageClockIcon.png",
-                                        height: 48.0,
-                                        width: 48.0,
-                                      ),
-                                      SizedBox(
-                                        width: 8.0,
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 8.0),
-                                        child: Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.58,
-                                          child: Text(
-                                            isSeller
-                                                ? "Alıcı ödeme işlemini gerçekleştirdikten sonra ilgili ürünü kargolaman ve kargo takip bilgisini uygulamamıza girmen için 72 saatiniz olduğunu unutmayın."
-                                                : 'Alıcısı olduğunuz ürünün ödemesini\ngerçekleştirmek için 72 saatiniz olduğunu unutmayın.\nÖdemesi gerçekleştirilmeyen\nişlemler satıcı itirazıyla iptal\nedilecektir.',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              fontSize: 11.5,
-                                              fontWeight: FontWeight.w500,
-                                              color: Color(0xFF8F8F8F),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 12.0,
-                                  ),
-                                  ElevatedButton(
-                                    style: ButtonStyle(
-                                      backgroundColor:
-                                          MaterialStateProperty.all(
-                                              Colors.white),
-                                      shape: MaterialStateProperty.all(
-                                        RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(20.0),
-                                          side: BorderSide(
-                                            color: Color(0xFFEAEAEA),
-                                          ),
-                                        ),
-                                      ),
-                                      shadowColor: MaterialStateProperty.all(
-                                        roomSnapshot.data!.data()!["state"] ==
-                                                "Ödeme bekleniyor"
-                                            ? Color(0xFF48D1AB).withOpacity(0.3)
-                                            : (roomSnapshot.data!
-                                                        .data()!["state"] ==
-                                                    "Kargo bekleniyor"
-                                                ? Color(0xFF89AEFB)
-                                                    .withOpacity(0.3)
-                                                : Color(0xFF48D1AB)
-                                                    .withOpacity(0.3)),
-                                      ),
-                                      elevation:
-                                          MaterialStateProperty.all(10.0),
-                                    ),
-                                    onPressed: isSeller
-                                        ? (roomSnapshot.data!
-                                                    .data()!["state"] ==
-                                                "Ödeme bekleniyor"
-                                            ? null
-                                            : (roomSnapshot.data!
-                                                        .data()!["state"] ==
-                                                    "Kargo bekleniyor"
-                                                ? () {
-                                                    //TODO: CARGO INPUT
-                                                    roomSnapshot.data!.reference
-                                                        .update({
-                                                      "state": "Onay bekleniyor"
-                                                    });
-                                                  }
-                                                : null))
-                                        : (roomSnapshot.data!
-                                                    .data()!["state"] ==
-                                                "Ödeme bekleniyor"
-                                            ? () {
-                                                //TODO: PAYMENT PAGE
-                                                roomSnapshot.data!.reference
-                                                    .update({
-                                                  "state": "Kargo bekleniyor"
-                                                });
-                                              }
-                                            : (roomSnapshot.data!
-                                                        .data()!["state"] ==
-                                                    "Kargo bekleniyor"
-                                                ? null
-                                                : () {
-                                                    //TODO: CONFIRM INPUT
-                                                    roomSnapshot.data!.reference
-                                                        .update({
-                                                      "state": "Tamamlandı"
-                                                    });
-                                                  })),
-                                    child: Container(
-                                      alignment: Alignment.center,
-                                      width: 220,
-                                      height: 45,
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          roomSnapshot.data!.data()!["state"] ==
-                                                  "Ödeme bekleniyor"
-                                              ? Icon(
-                                                  FontAwesomeIcons
-                                                      .solidCreditCard,
-                                                  size: 20.0,
-                                                  color: Color(0xFF48D1AB),
-                                                )
-                                              : (roomSnapshot.data!
-                                                          .data()!["state"] ==
-                                                      "Kargo bekleniyor"
-                                                  ? Image.asset(
-                                                      "assets/images/roomCargoButtonIcon.png",
-                                                      width: 20.0,
-                                                    )
-                                                  : Icon(FontAwesomeIcons.check,
-                                                      size: 20.0,
-                                                      color:
-                                                          Color(0xFF48D1AB))),
-                                          SizedBox(
-                                            width: 16.0,
-                                          ),
-                                          isSeller
-                                              ? (roomSnapshot.data!
-                                                          .data()!["state"] ==
-                                                      "Ödeme bekleniyor"
-                                                  ? Text(
-                                                      "Ödeme Bekleniyor",
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: TextStyle(
-                                                        color:
-                                                            Color(0xFF48D1AB),
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 12,
-                                                      ),
-                                                    )
-                                                  : (roomSnapshot.data!.data()![
-                                                              "state"] ==
-                                                          "Kargo bekleniyor"
-                                                      ? Text(
-                                                          "Kargo Bilgileri Girişi",
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          style: TextStyle(
-                                                            color: Color(
-                                                                0xFF89AEFB),
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            fontSize: 12,
-                                                          ),
-                                                        )
-                                                      : (roomSnapshot.data!
-                                                                      .data()![
-                                                                  "state"] ==
-                                                              "Onay bekleniyor"
-                                                          ? Text(
-                                                              "Onay Bekleniyor",
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                              style: TextStyle(
-                                                                color: Color(
-                                                                    0xFF48D1AB),
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                fontSize: 12,
-                                                              ),
-                                                            )
-                                                          : Text(
-                                                              "Alışveriş Tamamlandı!",
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                              style: TextStyle(
-                                                                color: Color(
-                                                                    0xFF48D1AB),
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                fontSize: 10.5,
-                                                              ),
-                                                            ))))
-                                              : (roomSnapshot.data!
-                                                          .data()!["state"] ==
-                                                      "Ödeme bekleniyor"
-                                                  ? Text(
-                                                      "Ödeme Yap",
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: TextStyle(
-                                                        color:
-                                                            Color(0xFF48D1AB),
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 12,
-                                                      ),
-                                                    )
-                                                  : (roomSnapshot.data!.data()![
-                                                              "state"] ==
-                                                          "Kargo bekleniyor"
-                                                      ? Text(
-                                                          "Kargo Bekleniyor",
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          style: TextStyle(
-                                                            color: Color(
-                                                                0xFF89AEFB),
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            fontSize: 12,
-                                                          ),
-                                                        )
-                                                      : (roomSnapshot.data!
-                                                                      .data()![
-                                                                  "state"] ==
-                                                              "Onay bekleniyor"
-                                                          ? Text(
-                                                              "Alışverişi Onayla",
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                              style: TextStyle(
-                                                                color: Color(
-                                                                    0xFF48D1AB),
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                fontSize: 12,
-                                                              ),
-                                                            )
-                                                          : Text(
-                                                              "Alışveriş Tamamlandı!",
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                              style: TextStyle(
-                                                                color: Color(
-                                                                    0xFF48D1AB),
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                fontSize: 10.5,
-                                                              ),
-                                                            )))),
-                                          SizedBox(
-                                            width: 16.0,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 8.0,
-                                  ),
-                                  ElevatedButton(
-                                    style: ButtonStyle(
-                                      backgroundColor:
-                                          MaterialStateProperty.all(
-                                              Colors.white),
-                                      shape: MaterialStateProperty.all(
-                                        RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(20.0),
-                                          side: BorderSide(
-                                            color: Color(0xFFEAEAEA),
-                                          ),
-                                        ),
-                                      ),
-                                      shadowColor: MaterialStateProperty.all(
-                                        Color(0xFF0877F7).withOpacity(0.3),
-                                      ),
-                                      elevation:
-                                          MaterialStateProperty.all(10.0),
-                                    ),
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        FadeRoute(
-                                          page: ChatScreen(
-                                            item: roomSnapshot.data!.data()!,
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                    child: Container(
-                                      alignment: Alignment.center,
-                                      width: 220,
-                                      height: 45,
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Image.asset(
-                                            "assets/images/roomMessagesIcon.png",
-                                            width: 20.0,
-                                          ),
-                                          SizedBox(
-                                            width: 16.0,
-                                          ),
-                                          Text(
-                                            "Mesajlaşma Ekranı",
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              color: Color(0xFF0877F7),
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 13,
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: 16.0,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 8.0,
-                                  ),
-                                  ElevatedButton(
-                                    style: ButtonStyle(
-                                      backgroundColor:
-                                          MaterialStateProperty.all(
-                                              Colors.white),
-                                      shape: MaterialStateProperty.all(
-                                        RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(20.0),
-                                          side: BorderSide(
-                                            color: Color(0xFFEAEAEA),
-                                          ),
-                                        ),
-                                      ),
-                                      shadowColor: MaterialStateProperty.all(
-                                        Color(0xFFFE9ECC).withOpacity(0.3),
-                                      ),
-                                      elevation:
-                                          MaterialStateProperty.all(10.0),
-                                    ),
-                                    onPressed:
-                                        roomSnapshot.data!
-                                                .data()!
-                                                .containsKey("problem")
-                                            ? () {
-                                                showDialog(
-                                                    context: context,
-                                                    builder: (context) {
-                                                      return AlertDialog(
-                                                        shape:
-                                                            RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      10.0),
-                                                          side: BorderSide(
-                                                            color: Color(
-                                                                0xFFABCDF1),
-                                                          ),
-                                                        ),
-                                                        backgroundColor:
-                                                            Color(0xFFE5EFFA),
-                                                        content: Column(
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          children: [
-                                                            Row(
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .center,
-                                                              children: [
-                                                                Container(
-                                                                  decoration:
-                                                                      BoxDecoration(
-                                                                    color:
-                                                                        kButtonBlue,
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            6.0),
-                                                                  ),
-                                                                  child:
-                                                                      Padding(
-                                                                    padding:
-                                                                        const EdgeInsets.all(
-                                                                            8.0),
-                                                                    child: Icon(
-                                                                      FontAwesomeIcons
-                                                                          .infoCircle,
-                                                                      color: Colors
-                                                                          .white,
-                                                                      size:
-                                                                          20.0,
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                                SizedBox(
-                                                                  width: 12.0,
-                                                                ),
-                                                                Text(
-                                                                  "Talebiniz iletildi!",
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .center,
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontSize:
-                                                                        18.0,
-                                                                    height: 1.2,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                    color:
-                                                                        kDarkBlue,
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            SizedBox(
-                                                              height: 12.0,
-                                                            ),
-                                                            Text(
-                                                              "Talebinizin sürecini Çözüm Merkezi kısmından takip edebilir, çözüm merkeziyle iletişime geçebilirsiniz.",
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                              style: TextStyle(
-                                                                fontSize: 12.0,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
-                                                                color:
-                                                                    kDarkBlue,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      );
-                                                    });
-                                              }
-                                            : () {
-                                                TextEditingController
-                                                    _problemController =
-                                                    TextEditingController();
-                                                String? selected;
-
-                                                showModalBottomSheet(
-                                                    context: context,
-                                                    isScrollControlled: true,
-                                                    builder: (context) {
-                                                      return StatefulBuilder(
-                                                          builder: (context,
-                                                              setState) {
-                                                        return Container(
-                                                          color:
-                                                              Color(0xFF757575),
-                                                          child: Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .symmetric(
-                                                                    horizontal:
-                                                                        8.0),
-                                                            child: Container(
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                color: Colors
-                                                                    .white,
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .vertical(
-                                                                  top: Radius
-                                                                      .circular(
-                                                                          20.0),
-                                                                ),
-                                                              ),
-                                                              child: Padding(
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                        .symmetric(
-                                                                  vertical:
-                                                                      16.0,
-                                                                  horizontal:
-                                                                      16.0,
-                                                                ),
-                                                                child: Column(
-                                                                  mainAxisSize:
-                                                                      MainAxisSize
-                                                                          .min,
-                                                                  children: [
-                                                                    Container(
-                                                                      width:
-                                                                          50.0,
-                                                                      height:
-                                                                          3.0,
-                                                                      decoration:
-                                                                          BoxDecoration(
-                                                                        color:
-                                                                            kDarkBlue,
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(10.0),
-                                                                      ),
-                                                                    ),
-                                                                    SizedBox(
-                                                                      height:
-                                                                          8.0,
-                                                                    ),
-                                                                    Text(
-                                                                      "Sorun Bildir",
-                                                                      style:
-                                                                          TextStyle(
-                                                                        color:
-                                                                            kDarkBlue,
-                                                                        fontWeight:
-                                                                            FontWeight.w600,
-                                                                        fontSize:
-                                                                            16.0,
-                                                                      ),
-                                                                    ),
-                                                                    SizedBox(
-                                                                      height:
-                                                                          16.0,
-                                                                    ),
-                                                                    roomSnapshot.data!.data()!["buyer"] ==
-                                                                            _firebaseAuth.currentUser!.uid
-                                                                        ? Column(
-                                                                            children: [
-                                                                              GestureDetector(
-                                                                                onTap: () {
-                                                                                  setState(() {
-                                                                                    selected = "İlan detaylarında hata söz konusu";
-                                                                                  });
-                                                                                },
-                                                                                child: Row(
-                                                                                  children: [
-                                                                                    Container(
-                                                                                      decoration: BoxDecoration(
-                                                                                        shape: BoxShape.circle,
-                                                                                        color: Color(0xFFE2E2E2),
-                                                                                      ),
-                                                                                      child: Padding(
-                                                                                        padding: const EdgeInsets.all(5.0),
-                                                                                        child: Container(
-                                                                                          height: 11.0,
-                                                                                          width: 11.0,
-                                                                                          decoration: BoxDecoration(
-                                                                                            shape: BoxShape.circle,
-                                                                                            color: selected == "İlan detaylarında hata söz konusu" ? kButtonBlue : Color(0xFFE2E2E2),
-                                                                                          ),
-                                                                                        ),
-                                                                                      ),
-                                                                                    ),
-                                                                                    SizedBox(
-                                                                                      width: 8.0,
-                                                                                    ),
-                                                                                    Text(
-                                                                                      "İlan detaylarında hata söz konusu",
-                                                                                      style: TextStyle(
-                                                                                        color: Color(0xFF2D3540),
-                                                                                        fontWeight: FontWeight.w500,
-                                                                                        fontSize: 14.0,
-                                                                                      ),
-                                                                                    ),
-                                                                                  ],
-                                                                                ),
-                                                                              ),
-                                                                              SizedBox(
-                                                                                height: 14.0,
-                                                                              ),
-                                                                              GestureDetector(
-                                                                                onTap: () {
-                                                                                  setState(() {
-                                                                                    selected = "Ödeme süreci ile ilgili sorun yaşıyorum";
-                                                                                  });
-                                                                                },
-                                                                                child: Row(
-                                                                                  children: [
-                                                                                    Container(
-                                                                                      decoration: BoxDecoration(
-                                                                                        shape: BoxShape.circle,
-                                                                                        color: Color(0xFFE2E2E2),
-                                                                                      ),
-                                                                                      child: Padding(
-                                                                                        padding: const EdgeInsets.all(5.0),
-                                                                                        child: Container(
-                                                                                          height: 11.0,
-                                                                                          width: 11.0,
-                                                                                          decoration: BoxDecoration(
-                                                                                            shape: BoxShape.circle,
-                                                                                            color: selected == "Ödeme süreci ile ilgili sorun yaşıyorum" ? kButtonBlue : Color(0xFFE2E2E2),
-                                                                                          ),
-                                                                                        ),
-                                                                                      ),
-                                                                                    ),
-                                                                                    SizedBox(
-                                                                                      width: 8.0,
-                                                                                    ),
-                                                                                    Text(
-                                                                                      "Ödeme süreci ile ilgili sorun yaşıyorum",
-                                                                                      style: TextStyle(
-                                                                                        color: Color(0xFF2D3540),
-                                                                                        fontWeight: FontWeight.w500,
-                                                                                        fontSize: 14.0,
-                                                                                      ),
-                                                                                    ),
-                                                                                  ],
-                                                                                ),
-                                                                              ),
-                                                                              SizedBox(
-                                                                                height: 14.0,
-                                                                              ),
-                                                                              GestureDetector(
-                                                                                onTap: () {
-                                                                                  setState(() {
-                                                                                    selected = "Kargo süreci ile ilgili sorun yaşıyorum";
-                                                                                  });
-                                                                                },
-                                                                                child: Row(
-                                                                                  children: [
-                                                                                    Container(
-                                                                                      decoration: BoxDecoration(
-                                                                                        shape: BoxShape.circle,
-                                                                                        color: Color(0xFFE2E2E2),
-                                                                                      ),
-                                                                                      child: Padding(
-                                                                                        padding: const EdgeInsets.all(5.0),
-                                                                                        child: Container(
-                                                                                          height: 11.0,
-                                                                                          width: 11.0,
-                                                                                          decoration: BoxDecoration(
-                                                                                            shape: BoxShape.circle,
-                                                                                            color: selected == "Kargo süreci ile ilgili sorun yaşıyorum" ? kButtonBlue : Color(0xFFE2E2E2),
-                                                                                          ),
-                                                                                        ),
-                                                                                      ),
-                                                                                    ),
-                                                                                    SizedBox(
-                                                                                      width: 8.0,
-                                                                                    ),
-                                                                                    Text(
-                                                                                      "Kargo süreci ile ilgili sorun yaşıyorum",
-                                                                                      style: TextStyle(
-                                                                                        color: Color(0xFF2D3540),
-                                                                                        fontWeight: FontWeight.w500,
-                                                                                        fontSize: 14.0,
-                                                                                      ),
-                                                                                    ),
-                                                                                  ],
-                                                                                ),
-                                                                              ),
-                                                                              SizedBox(
-                                                                                height: 14.0,
-                                                                              ),
-                                                                              GestureDetector(
-                                                                                onTap: () {
-                                                                                  setState(() {
-                                                                                    selected = "Elime ulaşan ürün kırık/hatalı/yanlış";
-                                                                                  });
-                                                                                },
-                                                                                child: Row(
-                                                                                  children: [
-                                                                                    Container(
-                                                                                      decoration: BoxDecoration(
-                                                                                        shape: BoxShape.circle,
-                                                                                        color: Color(0xFFE2E2E2),
-                                                                                      ),
-                                                                                      child: Padding(
-                                                                                        padding: const EdgeInsets.all(5.0),
-                                                                                        child: Container(
-                                                                                          height: 11.0,
-                                                                                          width: 11.0,
-                                                                                          decoration: BoxDecoration(
-                                                                                            shape: BoxShape.circle,
-                                                                                            color: selected == "Elime ulaşan ürün kırık/hatalı/yanlış" ? kButtonBlue : Color(0xFFE2E2E2),
-                                                                                          ),
-                                                                                        ),
-                                                                                      ),
-                                                                                    ),
-                                                                                    SizedBox(
-                                                                                      width: 8.0,
-                                                                                    ),
-                                                                                    Text(
-                                                                                      "Elime ulaşan ürün kırık/hatalı/yanlış",
-                                                                                      style: TextStyle(
-                                                                                        color: Color(0xFF2D3540),
-                                                                                        fontWeight: FontWeight.w500,
-                                                                                        fontSize: 14.0,
-                                                                                      ),
-                                                                                    ),
-                                                                                  ],
-                                                                                ),
-                                                                              ),
-                                                                              SizedBox(
-                                                                                height: 14.0,
-                                                                              ),
-                                                                              GestureDetector(
-                                                                                onTap: () {
-                                                                                  setState(() {
-                                                                                    selected = "İade talebinde bulunmak istiyorum";
-                                                                                  });
-                                                                                },
-                                                                                child: Row(
-                                                                                  children: [
-                                                                                    Container(
-                                                                                      decoration: BoxDecoration(
-                                                                                        shape: BoxShape.circle,
-                                                                                        color: Color(0xFFE2E2E2),
-                                                                                      ),
-                                                                                      child: Padding(
-                                                                                        padding: const EdgeInsets.all(5.0),
-                                                                                        child: Container(
-                                                                                          height: 11.0,
-                                                                                          width: 11.0,
-                                                                                          decoration: BoxDecoration(
-                                                                                            shape: BoxShape.circle,
-                                                                                            color: selected == "İade talebinde bulunmak istiyorum" ? kButtonBlue : Color(0xFFE2E2E2),
-                                                                                          ),
-                                                                                        ),
-                                                                                      ),
-                                                                                    ),
-                                                                                    SizedBox(
-                                                                                      width: 8.0,
-                                                                                    ),
-                                                                                    Text(
-                                                                                      "İade talebinde bulunmak istiyorum",
-                                                                                      style: TextStyle(
-                                                                                        color: Color(0xFF2D3540),
-                                                                                        fontWeight: FontWeight.w500,
-                                                                                        fontSize: 14.0,
-                                                                                      ),
-                                                                                    ),
-                                                                                  ],
-                                                                                ),
-                                                                              ),
-                                                                              SizedBox(
-                                                                                height: 14.0,
-                                                                              ),
-                                                                              GestureDetector(
-                                                                                onTap: () {
-                                                                                  setState(() {
-                                                                                    selected = "Diğer";
-                                                                                  });
-                                                                                },
-                                                                                child: Row(
-                                                                                  children: [
-                                                                                    Container(
-                                                                                      decoration: BoxDecoration(
-                                                                                        shape: BoxShape.circle,
-                                                                                        color: Color(0xFFE2E2E2),
-                                                                                      ),
-                                                                                      child: Padding(
-                                                                                        padding: const EdgeInsets.all(5.0),
-                                                                                        child: Container(
-                                                                                          height: 11.0,
-                                                                                          width: 11.0,
-                                                                                          decoration: BoxDecoration(
-                                                                                            shape: BoxShape.circle,
-                                                                                            color: selected == "Diğer" ? kButtonBlue : Color(0xFFE2E2E2),
-                                                                                          ),
-                                                                                        ),
-                                                                                      ),
-                                                                                    ),
-                                                                                    SizedBox(
-                                                                                      width: 8.0,
-                                                                                    ),
-                                                                                    Text(
-                                                                                      "Diğer",
-                                                                                      style: TextStyle(
-                                                                                        color: Color(0xFF2D3540),
-                                                                                        fontWeight: FontWeight.w500,
-                                                                                        fontSize: 14.0,
-                                                                                      ),
-                                                                                    ),
-                                                                                  ],
-                                                                                ),
-                                                                              ),
-                                                                              SizedBox(
-                                                                                height: 16.0,
-                                                                              ),
-                                                                            ],
-                                                                          )
-                                                                        : Column(
-                                                                            children: [
-                                                                              GestureDetector(
-                                                                                onTap: () {
-                                                                                  setState(() {
-                                                                                    selected = "İlan detaylarında değişiklik yapmak istiyorum";
-                                                                                  });
-                                                                                },
-                                                                                child: Row(
-                                                                                  children: [
-                                                                                    Container(
-                                                                                      decoration: BoxDecoration(
-                                                                                        shape: BoxShape.circle,
-                                                                                        color: Color(0xFFE2E2E2),
-                                                                                      ),
-                                                                                      child: Padding(
-                                                                                        padding: const EdgeInsets.all(5.0),
-                                                                                        child: Container(
-                                                                                          height: 11.0,
-                                                                                          width: 11.0,
-                                                                                          decoration: BoxDecoration(
-                                                                                            shape: BoxShape.circle,
-                                                                                            color: selected == "İlan detaylarında değişiklik yapmak istiyorum" ? kButtonBlue : Color(0xFFE2E2E2),
-                                                                                          ),
-                                                                                        ),
-                                                                                      ),
-                                                                                    ),
-                                                                                    SizedBox(
-                                                                                      width: 8.0,
-                                                                                    ),
-                                                                                    Text(
-                                                                                      "İlan detaylarında değişiklik yapmak\nistiyorum",
-                                                                                      style: TextStyle(
-                                                                                        color: Color(0xFF2D3540),
-                                                                                        fontWeight: FontWeight.w500,
-                                                                                        fontSize: 14.0,
-                                                                                      ),
-                                                                                    ),
-                                                                                  ],
-                                                                                ),
-                                                                              ),
-                                                                              SizedBox(
-                                                                                height: 14.0,
-                                                                              ),
-                                                                              GestureDetector(
-                                                                                onTap: () {
-                                                                                  setState(() {
-                                                                                    selected = "Kargo süreci ile ilgili sorun yaşıyorum";
-                                                                                  });
-                                                                                },
-                                                                                child: Row(
-                                                                                  children: [
-                                                                                    Container(
-                                                                                      decoration: BoxDecoration(
-                                                                                        shape: BoxShape.circle,
-                                                                                        color: Color(0xFFE2E2E2),
-                                                                                      ),
-                                                                                      child: Padding(
-                                                                                        padding: const EdgeInsets.all(5.0),
-                                                                                        child: Container(
-                                                                                          height: 11.0,
-                                                                                          width: 11.0,
-                                                                                          decoration: BoxDecoration(
-                                                                                            shape: BoxShape.circle,
-                                                                                            color: selected == "Kargo süreci ile ilgili sorun yaşıyorum" ? kButtonBlue : Color(0xFFE2E2E2),
-                                                                                          ),
-                                                                                        ),
-                                                                                      ),
-                                                                                    ),
-                                                                                    SizedBox(
-                                                                                      width: 8.0,
-                                                                                    ),
-                                                                                    Text(
-                                                                                      "Kargo süreci ile ilgili sorun yaşıyorum",
-                                                                                      style: TextStyle(
-                                                                                        color: Color(0xFF2D3540),
-                                                                                        fontWeight: FontWeight.w500,
-                                                                                        fontSize: 14.0,
-                                                                                      ),
-                                                                                    ),
-                                                                                  ],
-                                                                                ),
-                                                                              ),
-                                                                              SizedBox(
-                                                                                height: 14.0,
-                                                                              ),
-                                                                              GestureDetector(
-                                                                                onTap: () {
-                                                                                  setState(() {
-                                                                                    selected = "İadesi gerçekleşen ürün kırık/hatalı/yanlış";
-                                                                                  });
-                                                                                },
-                                                                                child: Row(
-                                                                                  children: [
-                                                                                    Container(
-                                                                                      decoration: BoxDecoration(
-                                                                                        shape: BoxShape.circle,
-                                                                                        color: Color(0xFFE2E2E2),
-                                                                                      ),
-                                                                                      child: Padding(
-                                                                                        padding: const EdgeInsets.all(5.0),
-                                                                                        child: Container(
-                                                                                          height: 11.0,
-                                                                                          width: 11.0,
-                                                                                          decoration: BoxDecoration(
-                                                                                            shape: BoxShape.circle,
-                                                                                            color: selected == "İadesi gerçekleşen ürün kırık/hatalı/yanlış" ? kButtonBlue : Color(0xFFE2E2E2),
-                                                                                          ),
-                                                                                        ),
-                                                                                      ),
-                                                                                    ),
-                                                                                    SizedBox(
-                                                                                      width: 8.0,
-                                                                                    ),
-                                                                                    Text(
-                                                                                      "İadesi gerçekleşen ürün kırık/hatalı/yanlış",
-                                                                                      style: TextStyle(
-                                                                                        color: Color(0xFF2D3540),
-                                                                                        fontWeight: FontWeight.w500,
-                                                                                        fontSize: 14.0,
-                                                                                      ),
-                                                                                    ),
-                                                                                  ],
-                                                                                ),
-                                                                              ),
-                                                                              SizedBox(
-                                                                                height: 14.0,
-                                                                              ),
-                                                                              GestureDetector(
-                                                                                onTap: () {
-                                                                                  setState(() {
-                                                                                    selected = "Diğer";
-                                                                                  });
-                                                                                },
-                                                                                child: Row(
-                                                                                  children: [
-                                                                                    Container(
-                                                                                      decoration: BoxDecoration(
-                                                                                        shape: BoxShape.circle,
-                                                                                        color: Color(0xFFE2E2E2),
-                                                                                      ),
-                                                                                      child: Padding(
-                                                                                        padding: const EdgeInsets.all(5.0),
-                                                                                        child: Container(
-                                                                                          height: 11.0,
-                                                                                          width: 11.0,
-                                                                                          decoration: BoxDecoration(
-                                                                                            shape: BoxShape.circle,
-                                                                                            color: selected == "Diğer" ? kButtonBlue : Color(0xFFE2E2E2),
-                                                                                          ),
-                                                                                        ),
-                                                                                      ),
-                                                                                    ),
-                                                                                    SizedBox(
-                                                                                      width: 8.0,
-                                                                                    ),
-                                                                                    Text(
-                                                                                      "Diğer",
-                                                                                      style: TextStyle(
-                                                                                        color: Color(0xFF2D3540),
-                                                                                        fontWeight: FontWeight.w500,
-                                                                                        fontSize: 14.0,
-                                                                                      ),
-                                                                                    ),
-                                                                                  ],
-                                                                                ),
-                                                                              ),
-                                                                              SizedBox(
-                                                                                height: 16.0,
-                                                                              ),
-                                                                            ],
-                                                                          ),
-                                                                    Padding(
-                                                                      padding:
-                                                                          EdgeInsets
-                                                                              .only(
-                                                                        bottom: MediaQuery.of(context)
-                                                                            .viewInsets
-                                                                            .bottom,
-                                                                      ),
-                                                                      child:
-                                                                          TextField(
-                                                                        controller:
-                                                                            _problemController,
-                                                                        decoration:
-                                                                            InputDecoration(
-                                                                          hintText:
-                                                                              "Yorumunuz",
-                                                                          border:
-                                                                              OutlineInputBorder(
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(10.0),
-                                                                            borderSide:
-                                                                                BorderSide(
-                                                                              color: Color(0xFF8C95A1),
-                                                                              width: 0.5,
-                                                                            ),
-                                                                          ),
-                                                                          focusedBorder:
-                                                                              OutlineInputBorder(
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(10.0),
-                                                                            borderSide:
-                                                                                BorderSide(
-                                                                              color: Color(0xFF8C95A1),
-                                                                              width: 0.5,
-                                                                            ),
-                                                                          ),
-                                                                          enabledBorder:
-                                                                              OutlineInputBorder(
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(10.0),
-                                                                            borderSide:
-                                                                                BorderSide(
-                                                                              color: Color(0xFF8C95A1),
-                                                                              width: 0.5,
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                        maxLines:
-                                                                            3,
-                                                                      ),
-                                                                    ),
-                                                                    SizedBox(
-                                                                      height:
-                                                                          2.0,
-                                                                    ),
-                                                                    Row(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .spaceEvenly,
-                                                                      children: [
-                                                                        ElevatedButton(
-                                                                          onPressed:
-                                                                              () {
-                                                                            Navigator.pop(context);
-                                                                          },
-                                                                          style:
-                                                                              ButtonStyle(
-                                                                            shape:
-                                                                                MaterialStateProperty.all<RoundedRectangleBorder>(
-                                                                              RoundedRectangleBorder(
-                                                                                side: BorderSide(
-                                                                                  color: kButtonBlue,
-                                                                                  width: 1.5,
-                                                                                ),
-                                                                                borderRadius: BorderRadius.circular(32.0),
-                                                                              ),
-                                                                            ),
-                                                                            minimumSize:
-                                                                                MaterialStateProperty.all(Size(140, 40)),
-                                                                            backgroundColor:
-                                                                                MaterialStateProperty.all(
-                                                                              Colors.white,
-                                                                            ),
-                                                                            elevation:
-                                                                                MaterialStateProperty.all(0),
-                                                                          ),
-                                                                          child:
-                                                                              Text(
-                                                                            "VAZGEÇ",
-                                                                            style:
-                                                                                TextStyle(
-                                                                              fontSize: 15.0,
-                                                                              fontWeight: FontWeight.bold,
-                                                                              color: kButtonBlue,
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                        ElevatedButton(
-                                                                          onPressed: selected != null && _problemController.text.isNotEmpty
-                                                                              ? () async {
-                                                                                  WriteBatch _writeBatch = _firestore.batch();
-                                                                                  _writeBatch.update(roomSnapshot.data!.reference, {
-                                                                                    "problem": selected,
-                                                                                    "problemDetail": _problemController.text,
-                                                                                    "problemDate": FieldValue.serverTimestamp(),
-                                                                                    "problemState": "Çözüm Merkezine İletildi."
-                                                                                  });
-                                                                                  _writeBatch.set(roomSnapshot.data!.reference.collection("ProblemMessages").doc(), {
-                                                                                    "message": _problemController.text,
-                                                                                    "date": FieldValue.serverTimestamp(),
-                                                                                    "sender": _firebaseAuth.currentUser!.uid,
-                                                                                  });
-                                                                                  await _writeBatch.commit().whenComplete(() {
-                                                                                    Navigator.pop(context);
-                                                                                    showDialog(
-                                                                                        context: context,
-                                                                                        builder: (context) {
-                                                                                          return AlertDialog(
-                                                                                            shape: RoundedRectangleBorder(
-                                                                                              borderRadius: BorderRadius.circular(10.0),
-                                                                                              side: BorderSide(
-                                                                                                color: Color(0xFFABCDF1),
-                                                                                              ),
-                                                                                            ),
-                                                                                            backgroundColor: Color(0xFFE5EFFA),
-                                                                                            content: Column(
-                                                                                              mainAxisSize: MainAxisSize.min,
-                                                                                              children: [
-                                                                                                Row(
-                                                                                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                                                                                  children: [
-                                                                                                    Container(
-                                                                                                      decoration: BoxDecoration(
-                                                                                                        color: kButtonBlue,
-                                                                                                        borderRadius: BorderRadius.circular(6.0),
-                                                                                                      ),
-                                                                                                      child: Padding(
-                                                                                                        padding: const EdgeInsets.all(8.0),
-                                                                                                        child: Icon(
-                                                                                                          FontAwesomeIcons.infoCircle,
-                                                                                                          color: Colors.white,
-                                                                                                          size: 20.0,
-                                                                                                        ),
-                                                                                                      ),
-                                                                                                    ),
-                                                                                                    SizedBox(
-                                                                                                      width: 12.0,
-                                                                                                    ),
-                                                                                                    Text(
-                                                                                                      "Talebiniz iletildi!",
-                                                                                                      textAlign: TextAlign.center,
-                                                                                                      style: TextStyle(
-                                                                                                        fontSize: 18.0,
-                                                                                                        height: 1.2,
-                                                                                                        fontWeight: FontWeight.bold,
-                                                                                                        color: kDarkBlue,
-                                                                                                      ),
-                                                                                                    ),
-                                                                                                  ],
-                                                                                                ),
-                                                                                                SizedBox(
-                                                                                                  height: 12.0,
-                                                                                                ),
-                                                                                                Text(
-                                                                                                  "Talebinizin sürecini Çözüm Merkezi kısmından takip edebilir, çözüm merkeziyle iletişime geçebilirsiniz.",
-                                                                                                  textAlign: TextAlign.center,
-                                                                                                  style: TextStyle(
-                                                                                                    fontSize: 12.0,
-                                                                                                    fontWeight: FontWeight.w500,
-                                                                                                    color: kDarkBlue,
-                                                                                                  ),
-                                                                                                ),
-                                                                                              ],
-                                                                                            ),
-                                                                                          );
-                                                                                        });
-                                                                                  });
-                                                                                }
-                                                                              : () {
-                                                                                  showDialog(
-                                                                                      context: context,
-                                                                                      builder: (context) {
-                                                                                        return Center(
-                                                                                          child: Wrap(
-                                                                                            children: [
-                                                                                              Stack(
-                                                                                                children: [
-                                                                                                  AlertDialog(
-                                                                                                    shape: RoundedRectangleBorder(
-                                                                                                      borderRadius: BorderRadius.circular(15),
-                                                                                                    ),
-                                                                                                    backgroundColor: Color(0xFF6EB0FC),
-                                                                                                    content: Center(
-                                                                                                      child: Column(
-                                                                                                        children: [
-                                                                                                          Align(
-                                                                                                            alignment: Alignment.topRight,
-                                                                                                            child: GestureDetector(
-                                                                                                              onTap: () {
-                                                                                                                Navigator.pop(context);
-                                                                                                              },
-                                                                                                              child: Icon(
-                                                                                                                FontAwesomeIcons.times,
-                                                                                                                color: Colors.white,
-                                                                                                              ),
-                                                                                                            ),
-                                                                                                          ),
-                                                                                                          SizedBox(
-                                                                                                            height: 48.0,
-                                                                                                          ),
-                                                                                                          Text(
-                                                                                                            "Sorun bildirebilmeniz için yorum kısmını doldurmanız gereklidir.",
-                                                                                                            style: TextStyle(
-                                                                                                              color: Colors.white,
-                                                                                                            ),
-                                                                                                            textAlign: TextAlign.center,
-                                                                                                          ),
-                                                                                                        ],
-                                                                                                      ),
-                                                                                                    ),
-                                                                                                  ),
-                                                                                                  Align(
-                                                                                                    alignment: Alignment.topCenter,
-                                                                                                    child: Image.asset(
-                                                                                                      "assets/images/warningDialogDraw.png",
-                                                                                                      height: 96.0,
-                                                                                                    ),
-                                                                                                  ),
-                                                                                                ],
-                                                                                              ),
-                                                                                            ],
-                                                                                          ),
-                                                                                        );
-                                                                                      });
-                                                                                },
-                                                                          style:
-                                                                              ButtonStyle(
-                                                                            shape:
-                                                                                MaterialStateProperty.all<RoundedRectangleBorder>(
-                                                                              RoundedRectangleBorder(
-                                                                                borderRadius: BorderRadius.circular(32.0),
-                                                                              ),
-                                                                            ),
-                                                                            shadowColor:
-                                                                                MaterialStateProperty.all(
-                                                                              kButtonBlue.withOpacity(0.4),
-                                                                            ),
-                                                                            minimumSize:
-                                                                                MaterialStateProperty.all(Size(140, 40)),
-                                                                            backgroundColor:
-                                                                                MaterialStateProperty.all(
-                                                                              kButtonBlue,
-                                                                            ),
-                                                                            elevation:
-                                                                                MaterialStateProperty.all(20),
-                                                                          ),
-                                                                          child:
-                                                                              Text(
-                                                                            "GÖNDER",
-                                                                            style:
-                                                                                TextStyle(
-                                                                              fontSize: 15.0,
-                                                                              fontWeight: FontWeight.bold,
-                                                                              color: Colors.white,
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                    SizedBox(
-                                                                      height:
-                                                                          2.0,
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        );
-                                                      });
-                                                    });
-                                              },
-                                    child: Container(
-                                      alignment: Alignment.center,
-                                      width: 220,
-                                      height: 45,
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Transform.rotate(
-                                            angle: 3.15,
-                                            child: Icon(
-                                              Icons.info,
-                                              color: Color(0xFFFE9ECC),
-                                              size: 20.0,
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: 16.0,
-                                          ),
-                                          Text(
-                                            "Sorun Bildir",
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              color: Color(0xFFFE9ECC),
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 13,
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: 16.0,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 8.0,
-                                  ),
-                                ],
-                              )
-                            : Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 32.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Icon(
-                                          FontAwesomeIcons.tag,
-                                          size: 12.0,
-                                          color: Color(0xFF6EB0FC),
-                                        ),
-                                        SizedBox(
-                                          width: 6.0,
-                                        ),
-                                        Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width -
-                                              88.0,
-                                          child: Text(
-                                            roomSnapshot.data!
-                                                .data()!["productName"],
-                                            style: TextStyle(
-                                              color: kDarkBlue,
-                                              fontWeight: FontWeight.w700,
-                                              fontSize: 15,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      height: 12.0,
-                                    ),
-                                    Row(
-                                      children: [
-                                        Icon(
-                                          FontAwesomeIcons.bookmark,
-                                          size: 12.0,
-                                          color: Color(0xFF6EB0FC),
-                                        ),
-                                        SizedBox(
-                                          width: 6.0,
-                                        ),
-                                        Text(
-                                          roomSnapshot.data!
-                                              .data()!["selectedProductType"],
-                                          style: TextStyle(
-                                            fontSize: 13.7,
-                                            color: Color(0xFFC3C3C3),
-                                            fontWeight: FontWeight.w700,
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      height: 16.0,
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          height: 230,
-                                          width: 215,
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(8.0),
-                                              image: DecorationImage(
-                                                image: NetworkImage(roomSnapshot
-                                                    .data!
-                                                    .data()!["imageURLs"][0]),
-                                                fit: BoxFit.cover,
-                                              )),
-                                        ),
-                                        SizedBox(
-                                          width: 10.0,
-                                        ),
-                                        Column(
-                                          children: [
-                                            if (roomSnapshot.data!
-                                                    .data()!["imageURLs"]
-                                                    .length >=
-                                                2)
-                                              Container(
-                                                height: 70.0,
-                                                width: 70.0,
-                                                decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8.0),
-                                                    image: DecorationImage(
-                                                      image: NetworkImage(
-                                                          roomSnapshot.data!
-                                                                  .data()![
-                                                              "imageURLs"][1]),
-                                                      fit: BoxFit.cover,
-                                                    )),
-                                              ),
-                                            if (roomSnapshot.data!
-                                                    .data()!["imageURLs"]
-                                                    .length >=
-                                                3)
-                                              SizedBox(
-                                                height: 8.0,
-                                              ),
-                                            if (roomSnapshot.data!
-                                                    .data()!["imageURLs"]
-                                                    .length >=
-                                                3)
-                                              Container(
-                                                height: 70.0,
-                                                width: 70.0,
-                                                decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8.0),
-                                                    image: DecorationImage(
-                                                      image: NetworkImage(
-                                                          roomSnapshot.data!
-                                                                  .data()![
-                                                              "imageURLs"][2]),
-                                                      fit: BoxFit.cover,
-                                                    )),
-                                              ),
-                                            if (roomSnapshot.data!
-                                                    .data()!["imageURLs"]
-                                                    .length ==
-                                                4)
-                                              SizedBox(
-                                                height: 8.0,
-                                              ),
-                                            if (roomSnapshot.data!
-                                                    .data()!["imageURLs"]
-                                                    .length ==
-                                                4)
-                                              Container(
-                                                height: 70.0,
-                                                width: 70.0,
-                                                decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8.0),
-                                                    image: DecorationImage(
-                                                      image: NetworkImage(
-                                                          roomSnapshot.data!
-                                                                  .data()![
-                                                              "imageURLs"][3]),
-                                                      fit: BoxFit.cover,
-                                                    )),
-                                              ),
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      height: 8.0,
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 12.0),
-                                      child: Container(
-                                        height: 1,
-                                        color: Color(0xFFC9C6C6),
-                                      ),
-                                    ),
-                                    ProductInfoRow(
-                                        title: "Anlaşılan Ücret",
-                                        info: roomSnapshot.data!
-                                                .data()!["productPrice"] +
-                                            " TL",
-                                        icon:
-                                            "assets/images/productPriceIcon.png"),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 12.0),
-                                      child: Container(
-                                        height: 1,
-                                        color: Color(0xFFC9C6C6),
-                                      ),
-                                    ),
-                                    ProductInfoRow(
-                                        title: isSeller
-                                            ? "Alıcının İsmi"
-                                            : "Satıcının İsmi",
-                                        info: roomSnapshot.data!
-                                            .data()!["buyerName"],
-                                        icon:
-                                            "assets/images/buyerNameIcon.png"),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 12.0),
-                                      child: Container(
-                                        height: 1,
-                                        color: Color(0xFFC9C6C6),
-                                      ),
-                                    ),
-                                    ProductInfoRow(
-                                        title: "Kargo Firması",
-                                        info: roomSnapshot.data!
-                                            .data()!["selectedCargo"],
-                                        icon:
-                                            "assets/images/selectedCargoIcon.png"),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 12.0),
-                                      child: Container(
-                                        height: 1,
-                                        color: Color(0xFFC9C6C6),
-                                      ),
-                                    ),
-                                    ProductInfoRow(
-                                        title: "Anlaşılan Kargolama Tarihi",
-                                        info: (roomSnapshot.data!
-                                                        .data()!["cargoDate"]
-                                                        .toDate()
-                                                        .day <
-                                                    10
-                                                ? "0"
-                                                : "") +
-                                            roomSnapshot.data!
-                                                .data()!["cargoDate"]
-                                                .toDate()
-                                                .day
-                                                .toString() +
-                                            "/" +
-                                            (roomSnapshot.data!
-                                                        .data()!["cargoDate"]
-                                                        .toDate()
-                                                        .month <
-                                                    10
-                                                ? "0"
-                                                : "") +
-                                            roomSnapshot.data!
-                                                .data()!["cargoDate"]
-                                                .toDate()
-                                                .month
-                                                .toString() +
-                                            "/" +
-                                            roomSnapshot.data!
-                                                .data()!["cargoDate"]
-                                                .toDate()
-                                                .year
-                                                .toString(),
-                                        icon:
-                                            "assets/images/cargoDateIcon.png"),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 12.0),
-                                      child: Container(
-                                        height: 1,
-                                        color: Color(0xFFC9C6C6),
-                                      ),
-                                    ),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Image.asset(
-                                              "assets/images/productDescriptionIcon.png",
-                                              height: 13.0,
-                                              width: 20.0,
-                                            ),
-                                            SizedBox(
-                                              width: 6.0,
-                                            ),
-                                            Text(
-                                              "Ürün Açıklaması & Detaylar",
-                                              style: TextStyle(
-                                                color: kDarkBlue,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 13.0,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBox(
-                                          height: 8.0,
-                                        ),
-                                        Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width -
-                                              32,
-                                          decoration: BoxDecoration(
-                                              color: Color(0xFFFEFDFD),
-                                              borderRadius:
-                                                  BorderRadius.circular(10.0),
-                                              border: Border.all(
-                                                color: Color(0xFF707070)
-                                                    .withOpacity(0.1),
-                                              )),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Text(
-                                              roomSnapshot.data!.data()![
-                                                  "productDescription"],
-                                              style: TextStyle(
-                                                color: kTextFieldGrey,
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 13.0,
-                                              ),
-                                              textAlign: TextAlign.start,
-                                              maxLines: 1,
-                                              softWrap: false,
-                                              overflow: TextOverflow.clip,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      height: 32.0,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                        SizedBox(
-                          height: 8.0,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            );
+                  );
+                });
           }),
     );
   }

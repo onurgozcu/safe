@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'FadeRoute.dart';
+import 'NotificationHandler.dart';
 import 'ShoppingPage.dart';
 import 'constants.dart';
 
@@ -223,9 +224,26 @@ class _AnchorPageState extends State<AnchorPage> {
                                             _firebaseAuth.currentUser!.uid,
                                           ]),
                                           "state": "Ödeme bekleniyor",
-                                        }).whenComplete(() {
-                                          _refCodeController.clear();
-                                          Navigator.pop(context);
+                                        }).whenComplete(() async {
+                                          await _firestore
+                                              .collection("Users")
+                                              .doc(value.docs[0]
+                                                  .data()["seller"])
+                                              .get()
+                                              .then((userData) async {
+                                            if (userData.data()![
+                                                "allowNotifications"]) {
+                                              await NotificationHandler
+                                                  .sendNotification(
+                                                      fcmToken: userData
+                                                          .data()!["fcmToken"],
+                                                      message:
+                                                          "Alıcı odaya katıldı.");
+                                            }
+
+                                            _refCodeController.clear();
+                                            Navigator.pop(context);
+                                          });
                                         });
                                       }
                                     } else {

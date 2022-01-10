@@ -250,11 +250,23 @@ class _ChatScreenState extends State<ChatScreen> {
                             child: CircularProgressIndicator(),
                           );
                         }
-                        Map<String, String> users = {
-                          sellerSnapshot.data!.id:
-                              sellerSnapshot.data!.data()!["name"],
-                          buyerSnapshot.data!.id:
-                              buyerSnapshot.data!.data()!["name"],
+                        Map<String, Map<String, String>> users = {
+                          sellerSnapshot.data!.id: {
+                            "name": sellerSnapshot.data!.data()!["name"],
+                            "pp": sellerSnapshot.data!
+                                    .data()!
+                                    .containsKey("profilePhoto")
+                                ? sellerSnapshot.data!.data()!["profilePhoto"]
+                                : ""
+                          },
+                          buyerSnapshot.data!.id: {
+                            "name": buyerSnapshot.data!.data()!["name"],
+                            "pp": buyerSnapshot.data!
+                                    .data()!
+                                    .containsKey("profilePhoto")
+                                ? buyerSnapshot.data!.data()!["profilePhoto"]
+                                : ""
+                          },
                         };
                         List<Map> messages = [];
                         messagesSnapshot.data!.docs.reversed
@@ -420,18 +432,50 @@ class _ChatScreenState extends State<ChatScreen> {
                                               : MainAxisAlignment.start,
                                           children: [
                                             if (!isSender)
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    right: 4.0),
-                                                child: Container(
-                                                  height: 26.0,
-                                                  width: 26.0,
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.grey,
-                                                    shape: BoxShape.circle,
-                                                  ),
-                                                ),
-                                              ),
+                                              users[messages[index]["sender"]]![
+                                                          "pp"] ==
+                                                      ""
+                                                  ? Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              right: 4.0),
+                                                      child: Container(
+                                                        height: 26.0,
+                                                        width: 26.0,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: Colors.grey,
+                                                          shape:
+                                                              BoxShape.circle,
+                                                        ),
+                                                      ),
+                                                    )
+                                                  : Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              right: 4.0),
+                                                      child: Container(
+                                                        height: 26.0,
+                                                        width: 26.0,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: Colors.grey,
+                                                          shape:
+                                                              BoxShape.circle,
+                                                          image:
+                                                              DecorationImage(
+                                                            image: NetworkImage(
+                                                              users[messages[
+                                                                          index]
+                                                                      [
+                                                                      "sender"]]![
+                                                                  "pp"]!,
+                                                            ),
+                                                            fit: BoxFit.cover,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
                                             Column(
                                               crossAxisAlignment: isSender
                                                   ? CrossAxisAlignment.end
@@ -503,7 +547,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                                   height: 4.0,
                                                 ),
                                                 Text(
-                                                  "${users[messages[index]["sender"]]!}, $dateText",
+                                                  "${users[messages[index]["sender"]]!["name"]}, $dateText",
                                                   style: TextStyle(
                                                     color: Color(0xFFE2E2E2),
                                                     fontWeight: FontWeight.w600,
@@ -513,18 +557,50 @@ class _ChatScreenState extends State<ChatScreen> {
                                               ],
                                             ),
                                             if (isSender)
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 4.0),
-                                                child: Container(
-                                                  height: 26.0,
-                                                  width: 26.0,
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.grey,
-                                                    shape: BoxShape.circle,
-                                                  ),
-                                                ),
-                                              ),
+                                              users[messages[index]["sender"]]![
+                                                          "pp"] ==
+                                                      ""
+                                                  ? Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              left: 4.0),
+                                                      child: Container(
+                                                        height: 26.0,
+                                                        width: 26.0,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: Colors.grey,
+                                                          shape:
+                                                              BoxShape.circle,
+                                                        ),
+                                                      ),
+                                                    )
+                                                  : Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              left: 4.0),
+                                                      child: Container(
+                                                        height: 26.0,
+                                                        width: 26.0,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: Colors.grey,
+                                                          shape:
+                                                              BoxShape.circle,
+                                                          image:
+                                                              DecorationImage(
+                                                            image: NetworkImage(
+                                                              users[messages[
+                                                                          index]
+                                                                      [
+                                                                      "sender"]]![
+                                                                  "pp"]!,
+                                                            ),
+                                                            fit: BoxFit.cover,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
                                           ],
                                         ),
                                       ),

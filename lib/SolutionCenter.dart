@@ -182,19 +182,17 @@ class _SolutionCenterState extends State<SolutionCenter> {
                           );
                         }
                         if (allRooms.data!.size == 0) {}
-                        List<Map>? itemList;
+                        List<Map>? itemList = [];
                         allRooms.data!.docs.forEach((element) {
                           if (tabIndex == 1 &&
                               element.data().containsKey("problemState")) {
-                            itemList = [];
-                            itemList!.add(element.data());
+                            itemList.add(element.data());
                           } else if (tabIndex == 0 &&
                               !element.data().containsKey("problemState")) {
-                            itemList = [];
-                            itemList!.add(element.data());
+                            itemList.add(element.data());
                           }
                         });
-                        if (itemList == null && tabIndex == 0) {
+                        if (itemList.isEmpty && tabIndex == 0) {
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 32.0),
                             child: Column(
@@ -228,7 +226,7 @@ class _SolutionCenterState extends State<SolutionCenter> {
                           );
                         }
 
-                        if (itemList == null && tabIndex == 1) {
+                        if (itemList.isEmpty && tabIndex == 1) {
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 32.0),
                             child: Column(
@@ -261,11 +259,10 @@ class _SolutionCenterState extends State<SolutionCenter> {
                             ),
                           );
                         }
-
                         return ListView.builder(
-                            itemCount: itemList!.length,
+                            itemCount: itemList.length,
                             itemBuilder: (context, index) {
-                              bool isBuyer = itemList![index]["buyer"] ==
+                              bool isBuyer = itemList[index]["buyer"] ==
                                   _firebaseAuth.currentUser!.uid;
                               return Padding(
                                 padding: const EdgeInsets.symmetric(
@@ -933,13 +930,14 @@ class _SolutionCenterState extends State<SolutionCenter> {
                                                                             WriteBatch
                                                                                 _writeBatch =
                                                                                 _firestore.batch();
-                                                                            _writeBatch.update(_firestore.collection("Rooms").doc(itemList![index]["roomDocID"]), {
+                                                                            _writeBatch.update(_firestore.collection("Rooms").doc(itemList[index]["roomDocID"]), {
                                                                               "problem": selected,
                                                                               "problemDetail": _problemController.text,
                                                                               "problemDate": FieldValue.serverTimestamp(),
-                                                                              "problemState": "Çözüm Merkezine İletildi."
+                                                                              "problemState": "Çözüm Merkezine İletildi.",
+                                                                              "isReported": true,
                                                                             });
-                                                                            _writeBatch.set(_firestore.collection("Rooms").doc(itemList![index]["roomDocID"]).collection("ProblemMessages").doc(), {
+                                                                            _writeBatch.set(_firestore.collection("Rooms").doc(itemList[index]["roomDocID"]).collection("ProblemMessages").doc(), {
                                                                               "message": _problemController.text,
                                                                               "date": FieldValue.serverTimestamp(),
                                                                               "sender": _firebaseAuth.currentUser!.uid,
@@ -1010,7 +1008,63 @@ class _SolutionCenterState extends State<SolutionCenter> {
                                                                                   });
                                                                             });
                                                                           }
-                                                                        : () {},
+                                                                        : () {
+                                                                            showDialog(
+                                                                                context: context,
+                                                                                builder: (context) {
+                                                                                  return Center(
+                                                                                    child: Wrap(
+                                                                                      children: [
+                                                                                        Stack(
+                                                                                          children: [
+                                                                                            AlertDialog(
+                                                                                              shape: RoundedRectangleBorder(
+                                                                                                borderRadius: BorderRadius.circular(15),
+                                                                                              ),
+                                                                                              backgroundColor: Color(0xFF6EB0FC),
+                                                                                              content: Center(
+                                                                                                child: Column(
+                                                                                                  children: [
+                                                                                                    Align(
+                                                                                                      alignment: Alignment.topRight,
+                                                                                                      child: GestureDetector(
+                                                                                                        onTap: () {
+                                                                                                          Navigator.pop(context);
+                                                                                                        },
+                                                                                                        child: Icon(
+                                                                                                          FontAwesomeIcons.times,
+                                                                                                          color: Colors.white,
+                                                                                                        ),
+                                                                                                      ),
+                                                                                                    ),
+                                                                                                    SizedBox(
+                                                                                                      height: 48.0,
+                                                                                                    ),
+                                                                                                    Text(
+                                                                                                      "Sorun bildirebilmeniz için yorum kısmını doldurmanız gereklidir.",
+                                                                                                      style: TextStyle(
+                                                                                                        color: Colors.white,
+                                                                                                      ),
+                                                                                                      textAlign: TextAlign.center,
+                                                                                                    ),
+                                                                                                  ],
+                                                                                                ),
+                                                                                              ),
+                                                                                            ),
+                                                                                            Align(
+                                                                                              alignment: Alignment.topCenter,
+                                                                                              child: Image.asset(
+                                                                                                "assets/images/warningDialogDraw.png",
+                                                                                                height: 96.0,
+                                                                                              ),
+                                                                                            ),
+                                                                                          ],
+                                                                                        ),
+                                                                                      ],
+                                                                                    ),
+                                                                                  );
+                                                                                });
+                                                                          },
                                                                     style:
                                                                         ButtonStyle(
                                                                       shape: MaterialStateProperty
@@ -1072,7 +1126,7 @@ class _SolutionCenterState extends State<SolutionCenter> {
                                             context,
                                             FadeRoute(
                                               page: ItemSolutionPage(
-                                                item: itemList![index],
+                                                item: itemList[index],
                                               ),
                                             ),
                                           );
@@ -1104,7 +1158,7 @@ class _SolutionCenterState extends State<SolutionCenter> {
                                               decoration: BoxDecoration(
                                                   image: DecorationImage(
                                                     image: NetworkImage(
-                                                      itemList![index]
+                                                      itemList[index]
                                                           ["imageURLs"][0],
                                                     ),
                                                   ),
@@ -1137,49 +1191,50 @@ class _SolutionCenterState extends State<SolutionCenter> {
                                                   alignment: Alignment.topRight,
                                                   child: Text(
                                                     tabIndex == 0
-                                                        ? ((itemList![index]["date"].toDate().day < 10
-                                                                ? "0"
-                                                                : "") +
-                                                            itemList![index]
-                                                                    ["date"]
-                                                                .toDate()
-                                                                .day
-                                                                .toString() +
-                                                            "/" +
-                                                            (itemList![index]["date"].toDate().month < 10
-                                                                ? "0"
-                                                                : "") +
-                                                            itemList![index]
-                                                                    ["date"]
-                                                                .toDate()
-                                                                .month
-                                                                .toString() +
-                                                            "/" +
-                                                            itemList![index]
-                                                                    ["date"]
-                                                                .toDate()
-                                                                .year
-                                                                .toString())
-                                                        : ((itemList![index]["problemDate"].toDate().day < 10
-                                                                ? "0"
-                                                                : "") +
-                                                            itemList![index]["problemDate"]
-                                                                .toDate()
-                                                                .day
-                                                                .toString() +
-                                                            "/" +
-                                                            (itemList![index]["problemDate"]
+                                                        ? ((itemList[index]["date"]
                                                                         .toDate()
-                                                                        .month <
+                                                                        .day <
                                                                     10
                                                                 ? "0"
                                                                 : "") +
-                                                            itemList![index]["problemDate"]
+                                                            itemList[index]["date"]
+                                                                .toDate()
+                                                                .day
+                                                                .toString() +
+                                                            "/" +
+                                                            (itemList[index]["date"].toDate().month < 10
+                                                                ? "0"
+                                                                : "") +
+                                                            itemList[index]["date"]
                                                                 .toDate()
                                                                 .month
                                                                 .toString() +
                                                             "/" +
-                                                            itemList![index]
+                                                            itemList[index]["date"]
+                                                                .toDate()
+                                                                .year
+                                                                .toString())
+                                                        : ((itemList[index]["problemDate"]
+                                                                        .toDate()
+                                                                        .day <
+                                                                    10
+                                                                ? "0"
+                                                                : "") +
+                                                            itemList[index]["problemDate"]
+                                                                .toDate()
+                                                                .day
+                                                                .toString() +
+                                                            "/" +
+                                                            (itemList[index]["problemDate"].toDate().month <
+                                                                    10
+                                                                ? "0"
+                                                                : "") +
+                                                            itemList[index]["problemDate"]
+                                                                .toDate()
+                                                                .month
+                                                                .toString() +
+                                                            "/" +
+                                                            itemList[index]
                                                                     ["problemDate"]
                                                                 .toDate()
                                                                 .year
@@ -1199,7 +1254,7 @@ class _SolutionCenterState extends State<SolutionCenter> {
                                                           .width -
                                                       136.0,
                                                   child: Text(
-                                                    itemList![index]
+                                                    itemList[index]
                                                         ["productName"],
                                                     style: TextStyle(
                                                       fontSize: 14.0,
@@ -1210,7 +1265,7 @@ class _SolutionCenterState extends State<SolutionCenter> {
                                                   ),
                                                 ),
                                                 Text(
-                                                  itemList![index]
+                                                  itemList[index]
                                                       ["selectedProductType"],
                                                   style: TextStyle(
                                                     fontSize: 13.7,
@@ -1219,7 +1274,7 @@ class _SolutionCenterState extends State<SolutionCenter> {
                                                   ),
                                                 ),
                                                 Text(
-                                                  itemList![index]
+                                                  itemList[index]
                                                           ["productPrice"] +
                                                       " TL",
                                                   style: TextStyle(
@@ -1241,25 +1296,25 @@ class _SolutionCenterState extends State<SolutionCenter> {
                                                           BorderRadius.circular(
                                                               2.0),
                                                       color: tabIndex == 0
-                                                          ? (itemList![index]["state"] ==
+                                                          ? (itemList[index]["state"] ==
                                                                   "Alıcı Bekleniyor"
                                                               ? Colors.white
-                                                              : (itemList![index]["state"] == "Ödeme bekleniyor"
+                                                              : (itemList[index]["state"] == "Ödeme bekleniyor"
                                                                   ? Color(
                                                                       0xFFF9F5EB)
-                                                                  : (itemList![index]["state"] == "Kargo bekleniyor" || itemList![index]["state"] == "Onay bekleniyor"
+                                                                  : (itemList[index]["state"] == "Kargo bekleniyor" || itemList[index]["state"] == "Onay bekleniyor"
                                                                       ? Color(
                                                                           0xFFF9F5EB)
-                                                                      : (itemList![index]["state"] == "Tamamlandı"
+                                                                      : (itemList[index]["state"] == "Tamamlandı"
                                                                           ? Color(
                                                                               0xFFEBF9F4)
                                                                           : Color(
                                                                               0xFFFEF3F7)))))
-                                                          : (itemList![index]["problemState"] ==
+                                                          : (itemList[index]["problemState"] ==
                                                                   "Çözüm Merkezine İletildi."
                                                               ? Color(
                                                                   0xFFFEF3F7)
-                                                              : (itemList![index]
+                                                              : (itemList[index]
                                                                           ["problemState"] ==
                                                                       "Bildiriminiz inceleniyor."
                                                                   ? Color(0xFFF9F5EB)
@@ -1271,52 +1326,52 @@ class _SolutionCenterState extends State<SolutionCenter> {
                                                               4.0),
                                                       child: Text(
                                                         tabIndex == 0
-                                                            ? (itemList![index][
+                                                            ? (itemList[index][
                                                                         "state"] ==
                                                                     "Alıcı Bekleniyor"
                                                                 ? ""
-                                                                : (itemList![index]
+                                                                : (itemList[index]
                                                                             [
                                                                             "state"] ==
                                                                         "Ödeme bekleniyor"
                                                                     ? "Alıcı Ödemesi Bekleniyor"
-                                                                    : (itemList![index]["state"] ==
+                                                                    : (itemList[index]["state"] ==
                                                                                 "Kargo bekleniyor" ||
-                                                                            itemList![index]["state"] ==
+                                                                            itemList[index]["state"] ==
                                                                                 "Onay bekleniyor"
                                                                         ? "Kargo ve Onay Aşamasında"
-                                                                        : (itemList![index]["state"] ==
+                                                                        : (itemList[index]["state"] ==
                                                                                 "Tamamlandı"
                                                                             ? "Alışveriş Tamamlandı"
                                                                             : "İptal Oldu"))))
-                                                            : itemList![index][
+                                                            : itemList[index][
                                                                 "problemState"],
                                                         style: TextStyle(
                                                           fontSize: 11,
                                                           color: tabIndex == 0
-                                                              ? itemList![index][
+                                                              ? itemList[index][
                                                                           "state"] ==
                                                                       "Alıcı Bekleniyor"
                                                                   ? Color(
                                                                       0xFFFFA841)
-                                                                  : (itemList![index]["state"] ==
+                                                                  : (itemList[index]["state"] ==
                                                                           "Ödeme bekleniyor"
                                                                       ? Color(
                                                                           0xFFFFA841)
-                                                                      : (itemList![index]["state"] == "Kargo bekleniyor" || itemList![index]["state"] == "Onay bekleniyor"
+                                                                      : (itemList[index]["state"] == "Kargo bekleniyor" || itemList[index]["state"] == "Onay bekleniyor"
                                                                           ? Color(
                                                                               0xFFFFA841)
-                                                                          : (itemList![index]["state"] == "Tamamlandı"
+                                                                          : (itemList[index]["state"] == "Tamamlandı"
                                                                               ? Color(
                                                                                   0xFF6CB49B)
                                                                               : Color(
                                                                                   0xFFDE6792))))
-                                                              : (itemList![index][
+                                                              : (itemList[index][
                                                                           "problemState"] ==
                                                                       "Çözüm Merkezine İletildi."
                                                                   ? Color(
                                                                       0xFFDE6792)
-                                                                  : (itemList![index]["problemState"] ==
+                                                                  : (itemList[index]["problemState"] ==
                                                                           "Bildiriminiz inceleniyor."
                                                                       ? Color(
                                                                           0xFFFFA841)
@@ -1729,8 +1784,9 @@ class _ItemSolutionPageState extends State<ItemSolutionPage> {
                                             .toString()) +
                                     " " +
                                     months[widget.item["reviewStartedDate"]
-                                        .toDate()
-                                        .month])
+                                            .toDate()
+                                            .month -
+                                        1])
                                 : ((widget.item["problemDate"].toDate().day < 10
                                         ? "0${widget.item["problemDate"].toDate().day}"
                                         : widget.item["problemDate"]
@@ -1766,8 +1822,9 @@ class _ItemSolutionPageState extends State<ItemSolutionPage> {
                                           .toString()) +
                                   " " +
                                   months[widget.item["problemRepliedDate"]
-                                      .toDate()
-                                      .month]
+                                          .toDate()
+                                          .month -
+                                      1]
                               : (widget.item["problemDate"].toDate().day < 10
                                       ? "0${widget.item["problemDate"].toDate().day}"
                                       : widget.item["problemDate"]
@@ -1918,44 +1975,45 @@ class _ItemSolutionPageState extends State<ItemSolutionPage> {
                       ],
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 32.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          "assets/images/solutionCenterAlert.png",
-                          height: 32.0,
-                        ),
-                        SizedBox(
-                          height: 16.0,
-                        ),
-                        Text(
-                          "Henüz Çözüm Merkezinden\ndönüş yapılmadı.",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 17.0,
-                            height: 1.1,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFFB1B1B1),
+                  if (widget.item["problemState"] != "Dönüş yapıldı.")
+                    Padding(
+                      padding: const EdgeInsets.only(top: 32.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            "assets/images/solutionCenterAlert.png",
+                            height: 32.0,
                           ),
-                        ),
-                        SizedBox(
-                          height: 16.0,
-                        ),
-                        Text(
-                          "Dönüş yapıldığında burada görüntülenecek.",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 12.0,
-                            height: 1.2,
-                            fontWeight: FontWeight.w500,
-                            color: Color(0xFFB1B1B1),
+                          SizedBox(
+                            height: 16.0,
                           ),
-                        ),
-                      ],
+                          Text(
+                            "Henüz Çözüm Merkezinden\ndönüş yapılmadı.",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 17.0,
+                              height: 1.1,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFFB1B1B1),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 16.0,
+                          ),
+                          Text(
+                            "Dönüş yapıldığında burada görüntülenecek.",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 12.0,
+                              height: 1.2,
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xFFB1B1B1),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
                   SizedBox(
                     height: 42.0,
                   ),
@@ -2264,11 +2322,23 @@ class _ProblemChatScreenState extends State<ProblemChatScreen> {
                             child: CircularProgressIndicator(),
                           );
                         }
-                        Map<String, String> users = {
-                          sellerSnapshot.data!.id:
-                              sellerSnapshot.data!.data()!["name"],
-                          buyerSnapshot.data!.id:
-                              buyerSnapshot.data!.data()!["name"],
+                        Map<String, Map<String, String>> users = {
+                          sellerSnapshot.data!.id: {
+                            "name": sellerSnapshot.data!.data()!["name"],
+                            "pp": sellerSnapshot.data!
+                                    .data()!
+                                    .containsKey("profilePhoto")
+                                ? sellerSnapshot.data!.data()!["profilePhoto"]
+                                : ""
+                          },
+                          buyerSnapshot.data!.id: {
+                            "name": buyerSnapshot.data!.data()!["name"],
+                            "pp": buyerSnapshot.data!
+                                    .data()!
+                                    .containsKey("profilePhoto")
+                                ? buyerSnapshot.data!.data()!["profilePhoto"]
+                                : ""
+                          },
                         };
                         List<Map> messages = [];
                         messagesSnapshot.data!.docs.reversed
@@ -2434,18 +2504,73 @@ class _ProblemChatScreenState extends State<ProblemChatScreen> {
                                               : MainAxisAlignment.start,
                                           children: [
                                             if (!isSender)
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    right: 4.0),
-                                                child: Container(
-                                                  height: 26.0,
-                                                  width: 26.0,
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.grey,
-                                                    shape: BoxShape.circle,
-                                                  ),
-                                                ),
-                                              ),
+                                              users.containsKey(
+                                                      messages[index]["sender"])
+                                                  ? (users[messages[index]
+                                                                  ["sender"]]![
+                                                              "pp"] ==
+                                                          ""
+                                                      ? Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  right: 4.0),
+                                                          child: Container(
+                                                            height: 26.0,
+                                                            width: 26.0,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color:
+                                                                  Colors.grey,
+                                                              shape: BoxShape
+                                                                  .circle,
+                                                            ),
+                                                          ),
+                                                        )
+                                                      : Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  right: 4.0),
+                                                          child: Container(
+                                                            height: 26.0,
+                                                            width: 26.0,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color:
+                                                                  Colors.grey,
+                                                              shape: BoxShape
+                                                                  .circle,
+                                                              image:
+                                                                  DecorationImage(
+                                                                image:
+                                                                    NetworkImage(
+                                                                  users[messages[
+                                                                          index]
+                                                                      [
+                                                                      "sender"]]!["pp"]!,
+                                                                ),
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ))
+                                                  : Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              right: 4.0),
+                                                      child: Container(
+                                                        height: 26.0,
+                                                        width: 26.0,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: kDarkBlue,
+                                                          shape:
+                                                              BoxShape.circle,
+                                                        ),
+                                                      ),
+                                                    ),
                                             Column(
                                               crossAxisAlignment: isSender
                                                   ? CrossAxisAlignment.end
@@ -2517,7 +2642,7 @@ class _ProblemChatScreenState extends State<ProblemChatScreen> {
                                                   height: 4.0,
                                                 ),
                                                 Text(
-                                                  "${users[messages[index]["sender"]]!}, $dateText",
+                                                  "${(users.containsKey(messages[index]["sender"]) ? users[messages[index]["sender"]]!["name"] : "Safe")}, $dateText",
                                                   style: TextStyle(
                                                     color: Color(0xFFE2E2E2),
                                                     fontWeight: FontWeight.w600,
@@ -2527,18 +2652,50 @@ class _ProblemChatScreenState extends State<ProblemChatScreen> {
                                               ],
                                             ),
                                             if (isSender)
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 4.0),
-                                                child: Container(
-                                                  height: 26.0,
-                                                  width: 26.0,
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.grey,
-                                                    shape: BoxShape.circle,
-                                                  ),
-                                                ),
-                                              ),
+                                              users[messages[index]["sender"]]![
+                                                          "pp"] ==
+                                                      ""
+                                                  ? Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              left: 4.0),
+                                                      child: Container(
+                                                        height: 26.0,
+                                                        width: 26.0,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: Colors.grey,
+                                                          shape:
+                                                              BoxShape.circle,
+                                                        ),
+                                                      ),
+                                                    )
+                                                  : Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              left: 4.0),
+                                                      child: Container(
+                                                        height: 26.0,
+                                                        width: 26.0,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: Colors.grey,
+                                                          shape:
+                                                              BoxShape.circle,
+                                                          image:
+                                                              DecorationImage(
+                                                            image: NetworkImage(
+                                                              users[messages[
+                                                                          index]
+                                                                      [
+                                                                      "sender"]]![
+                                                                  "pp"]!,
+                                                            ),
+                                                            fit: BoxFit.cover,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
                                           ],
                                         ),
                                       ),

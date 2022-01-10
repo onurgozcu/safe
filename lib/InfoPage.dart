@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:safe/constants.dart';
 
@@ -63,6 +64,11 @@ class _InfoPageState extends State<InfoPage> {
                   ],
                 )),
             Container(
+              constraints: BoxConstraints(
+                  minHeight: MediaQuery.of(context).size.height -
+                      64.0 -
+                      kBottomNavigationBarHeight -
+                      140.0),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.vertical(
@@ -75,24 +81,29 @@ class _InfoPageState extends State<InfoPage> {
                   ),
                 ],
               ),
-              child: ListView.builder(
-                  itemCount: 12,
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: EdgeInsets.only(
-                          top: index == 0 ? 24.0 : 0.0,
-                          left: 16.0,
-                          right: 16.0,
-                          bottom: index == 11 ? 12.0 : 0.0),
-                      child: CustomExpansionTile(
-                        question:
-                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
-                        answer:
-                            "Integer ac sapien egestas, elementum ex ut, sagittis arcu.",
-                      ),
-                    );
+              child: FutureBuilder<QuerySnapshot>(
+                  future: FirebaseFirestore.instance.collection("FAQ").get(),
+                  builder: (context, faqs) {
+                    if (!faqs.hasData) {
+                      return Container();
+                    }
+                    return ListView.builder(
+                        itemCount: faqs.data!.docs.length,
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: EdgeInsets.only(
+                                top: index == 0 ? 24.0 : 0.0,
+                                left: 16.0,
+                                right: 16.0,
+                                bottom: index == 11 ? 12.0 : 0.0),
+                            child: CustomExpansionTile(
+                              question: faqs.data!.docs[index]["question"],
+                              answer: faqs.data!.docs[index]["answer"],
+                            ),
+                          );
+                        });
                   }),
             ),
           ],
